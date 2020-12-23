@@ -8,3 +8,6 @@
 
 ## dependencies 
 * Spring Web
+
+# Shot Cut
+* Create Unit Test : Ctrl + Shift + T

@@ -1,10 +1,8 @@
-package com.jkpark.study.controller;
+package com.jkpark.study.user.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -16,45 +14,45 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //@SpringBootTest
 //@AutoConfigureMockMvc
-@WebMvcTest(HelloController.class)
-public class HelloControllerTest {
+@WebMvcTest(UserController.class)
+public class UserControllerTest {
 
 	@Autowired
 	private MockMvc mockMvc;
 
 	@Test
-	public void getHello() throws Exception {
-		String hello = "hello";
+	public void getUser() throws Exception {
+		String content = "hello";
 
-		mockMvc.perform(get("/hello"))
+		mockMvc.perform(get("/user"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(hello));
+				.andExpect(content().string(content));
 	}
 
 	@Test
-	public void postHello() throws Exception {
-		String hello = "hello";
+	public void postUser() throws Exception {
+		String content = "hello";
 
-		mockMvc.perform(post("/hello"))
+		mockMvc.perform(post("/user"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(hello));
+				.andExpect(content().string(content));
 	}
 
 	@Test
-	public void putHello() throws Exception {
-		String hello = "hello";
+	public void putUser() throws Exception {
+		String content = "hello";
 
-		mockMvc.perform(put("/hello"))
+		mockMvc.perform(put("/user"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(hello));
+				.andExpect(content().string(content));
 	}
 
 	@Test
-	public void deleteHello() throws Exception {
-		String hello = "hello";
+	public void deleteUser() throws Exception {
+		String content = "hello";
 
-		mockMvc.perform(delete("/hello"))
+		mockMvc.perform(delete("/user"))
 				.andExpect(status().isOk())
-				.andExpect(content().string(hello));
+				.andExpect(content().string(content));
 	}
 }

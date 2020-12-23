@@ -3,6 +3,7 @@ package com.jkpark.study;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+// it has @ComponentScan. so when this application is started, it will search @Component and make java bean.
 @SpringBootApplication
 public class Application {
 
