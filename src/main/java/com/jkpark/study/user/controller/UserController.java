@@ -1,8 +1,7 @@
 package com.jkpark.study.user.controller;
 
-import com.jkpark.study.global.impl.IUserService;
-import com.jkpark.study.global.model.UserModel;
-import com.jkpark.study.user.service.UserService;
+import com.jkpark.study.global.dto.UserDTO;
+import com.jkpark.study.global.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,22 +12,24 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
 	@Autowired
-	private IUserService service;
+	private UserService service;
 
 	@GetMapping("/user")
-	public UserModel getHello(@RequestParam(value = "id", required = true) String id) {
-		UserModel userModel = service.search(id);
+	public UserDTO getHello(@RequestParam(value = "id", required = true) String id) {
+		//UserDao user = service.search(id);
 
-		log.debug("getHello : {}", userModel.toString());
+		//log.debug("getHello : {}", user.toString());
 
-		return userModel;
+		//return user;
+
+		return null;
 	}
 
 	@PostMapping("/user")
-	public String postHello(@RequestBody UserModel userModel) {
-		service.add(userModel);
+	public String postHello(@RequestBody UserDTO user) {
+		service.upsert(user);
 
-		log.debug("postHello : {}", userModel.toString());
+		log.debug("postHello : {}", user.toString());
 
 		return "hello";
 	}
@@ -41,9 +42,10 @@ public class UserController {
 
 	@DeleteMapping("/user")
 	public String deleteHello(@RequestParam(value = "id", required = true) String id) {
-		service.remove(id);
+		//service.remove(id);
 
-		log.debug("deleteHello : {}", id);
+		//log.debug("deleteHello : {}", id);
 
-		return "hello";	}
+		return "hello";
+	}
 }
