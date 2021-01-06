@@ -19,21 +19,30 @@ configurations {
 }
 
 dependencies {
+	// for spring mvc
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-	implementation 'org.apache.logging.log4j:log4j-web:2.12.1'
+
+	// for json parser
+	// https://velog.io/@modsiw/Spring-JSON-Object-%EA%B4%80%EB%A0%A8
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
 
+	// for lombok annotations
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testCompileOnly 'org.projectlombok:lombok'
 	testAnnotationProcessor 'org.projectlombok:lombok'
 
+	// for unit test
 	testImplementation ('org.springframework.boot:spring-boot-starter-test'){
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+
+	// for logging
+	implementation 'org.apache.logging.log4j:log4j-web:2.12.1'
+	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
+	// for h2 database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	runtime 'com.h2database:h2'
 }

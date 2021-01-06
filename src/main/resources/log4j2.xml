@@ -6,7 +6,7 @@
     // it can be used like "${variable value name}"
     <Properties>
         <Property name="logFileName">jkpark_test_log</Property>
-        <Property name="layoutPattern">%style{%d{yyyy/MM/dd HH:mm:ss,SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue}  [%C] %style{[%t]}{yellow}- %m%n -</Property>
+        <Property name="layoutPattern">-%style{%d{yyyy/MM/dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue} %style{[%t]}{yellow} [%C %M] - %m%n</Property>
     </Properties>
 
     // it shows where logs are written
