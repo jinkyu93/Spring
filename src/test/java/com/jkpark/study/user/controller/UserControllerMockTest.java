@@ -2,7 +2,6 @@ package com.jkpark.study.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.global.dto.UserDTO;
-import com.jkpark.study.global.repository.UserRepository;
 import com.jkpark.study.global.service.UserService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
@@ -16,7 +15,6 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@AutoConfigureMockMvc
 @WebMvcTest(UserController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserControllerTest {
+public class UserControllerMockTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -40,9 +38,6 @@ public class UserControllerTest {
 	// Service 가 아닌 Controller 와의 데이터 통신만을 테스트 하기 위한 Unit Test Model
 	@MockBean
 	private UserService service;
-
-	@MockBean
-	private UserRepository dao;
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -60,7 +55,7 @@ public class UserControllerTest {
 		UserDTO mockData = makeTestUserDTO();
 
 		// mock service 에서 반환할 mock data 설정
-		when(service.findById(eq(testIdValue)))
+		when(service.findById(testIdValue))
 				.thenReturn(mockData);
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
@@ -77,7 +72,7 @@ public class UserControllerTest {
 
 	@Test
 	public void getUserNotFound() throws Exception {
-		when(service.findById(eq(testIdValue)))
+		when(service.findById(testIdValue))
 				.thenReturn(null);
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);

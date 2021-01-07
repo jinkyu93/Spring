@@ -4,14 +4,16 @@ import com.jkpark.study.global.domain.User;
 import com.jkpark.study.global.dto.UserDTO;
 import com.jkpark.study.global.repository.UserRepository;
 import com.jkpark.study.global.service.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-	@Autowired
+	//@Autowired
 	private UserRepository dao;
 
 	@Override

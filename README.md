@@ -13,9 +13,12 @@
 * JPA
 * lombok
 * h2database
+* Jackson
 
 # Shot Cut
 * Create Unit Test : Ctrl + Shift + T
+* Move Line Up or Down : Shift + Alt + Up or Down
+
 
 # Terms
 * Domain : Entity
@@ -29,4 +32,9 @@
     * Entity <-> DAO <-> Service <-> Controller <-> Client 사이에서 사용
     * DTO vs VO
         * 동일하지만 VO 는 readonly 속성을 가진다
-
+        
+# Annotations
+* @Autowired
+* @AllArgsConstructor
+* @Slf4j
+* @Transactional : 테스트 실행 후 테스트 결과를 Rollback 시키고 싶은 경우

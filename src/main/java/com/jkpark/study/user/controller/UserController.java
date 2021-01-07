@@ -2,6 +2,7 @@ package com.jkpark.study.user.controller;
 
 import com.jkpark.study.global.dto.UserDTO;
 import com.jkpark.study.global.service.UserService;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 // @Controller has @Component. so it will be java bean because of @ComponentScan annotation
-@RestController
 @Slf4j
+@RestController
+@AllArgsConstructor
 public class UserController {
 
-	@Autowired
+	//@Autowired
 	private UserService service;
 
 	@GetMapping("/user")
