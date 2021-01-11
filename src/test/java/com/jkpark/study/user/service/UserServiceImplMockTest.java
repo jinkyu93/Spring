@@ -1,5 +1,6 @@
 package com.jkpark.study.user.service;
 
+import com.jkpark.study.global.domain.UserRole;
 import com.jkpark.study.global.dto.UserDTO;
 import com.jkpark.study.global.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +18,7 @@ public class UserServiceImplMockTest {
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
+	private final UserRole testRoleValue = UserRole.ADMIN;
 
 	@Test
 	public void findByIdSuccess() {
@@ -29,6 +31,7 @@ public class UserServiceImplMockTest {
 
 		assertEquals(result.getId(), mockData.getId());
 		assertEquals(result.getPw(), mockData.getPw());
+		assertEquals(result.getRole(), mockData.getRole());
 	}
 
 	@Test
@@ -52,6 +55,7 @@ public class UserServiceImplMockTest {
 
 		assertEquals(result.getId(), mockData.getId());
 		assertEquals(result.getPw(), mockData.getPw());
+		assertEquals(result.getRole(), mockData.getRole());
 	}
 
 
@@ -71,6 +75,7 @@ public class UserServiceImplMockTest {
 		UserDTO mockData = new UserDTO();
 		mockData.setId(testIdValue);
 		mockData.setPw(testPasswordValue);
+		mockData.setRole(testRoleValue);
 
 		return mockData;
 	}

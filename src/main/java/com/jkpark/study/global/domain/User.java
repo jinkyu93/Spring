@@ -14,7 +14,6 @@ import java.util.UUID;
 @Table(name = "USER")
 @Entity
 public class User {
-
 	// means public key
 	@Id
 	// public key 생성 전략 설정
@@ -30,11 +29,17 @@ public class User {
 	@Column(name = "PASSWORD", nullable = false)
 	private String pw;
 
+	// enum 을 사용하는 case
+	@Column(name = "ROLE", nullable = false)
+	@Enumerated(value = EnumType.STRING)
+	private UserRole role;
+
 	// @Builder 를 사용해서 얻는 장점은?
 	// 밖에서 new 로 생성하는 것과의 차이 찾아보기
-	public User(String id, String pw) {
+	public User(String id, String pw, UserRole role) {
 		this.uuid = UUID.randomUUID();
 		this.id = id;
 		this.pw = pw;
+		this.role = role;
 	}
 }

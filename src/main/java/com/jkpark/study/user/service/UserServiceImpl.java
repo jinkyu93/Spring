@@ -54,6 +54,8 @@ public class UserServiceImpl implements UserService {
 		UserDTO dto = new UserDTO();
 		dto.setId(selectedUser.getId());
 		dto.setPw(selectedUser.getPw());
+		dto.setRole(selectedUser.getRole());
+
 		return dto;
 	}
 }

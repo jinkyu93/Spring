@@ -1,6 +1,7 @@
 package com.jkpark.study.global.repository;
 
 import com.jkpark.study.global.domain.User;
+import com.jkpark.study.global.domain.UserRole;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -19,6 +20,7 @@ public class UserRepositoryMockTest {
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
+	private final UserRole testRoleValue = UserRole.ADMIN;
 
 	@Test
 	public void findByIdSuccess() {
@@ -68,6 +70,6 @@ public class UserRepositoryMockTest {
 	}
 
 	private User makeTestUser() {
-		return new User(testIdValue, testPasswordValue);
+		return new User(testIdValue, testPasswordValue, testRoleValue);
 	}
 }

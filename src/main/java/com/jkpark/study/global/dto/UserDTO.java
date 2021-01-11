@@ -1,6 +1,7 @@
 package com.jkpark.study.global.dto;
 
 import com.jkpark.study.global.domain.User;
+import com.jkpark.study.global.domain.UserRole;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,7 +16,9 @@ public class UserDTO {
 
 	private String pw;
 
+	private UserRole role;
+
 	public User toEntity() {
-		return new User(id, pw);
+		return new User(id, pw, role);
 	}
 }

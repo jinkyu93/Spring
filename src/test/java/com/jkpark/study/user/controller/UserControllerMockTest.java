@@ -1,6 +1,7 @@
 package com.jkpark.study.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jkpark.study.global.domain.UserRole;
 import com.jkpark.study.global.dto.UserDTO;
 import com.jkpark.study.global.service.UserService;
 import org.junit.jupiter.api.MethodOrderer;
@@ -49,6 +50,7 @@ public class UserControllerMockTest {
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
+	private final UserRole testRoleValue = UserRole.ADMIN;
 
 	@Test
 	public void getUserFound() throws Exception {
@@ -67,7 +69,8 @@ public class UserControllerMockTest {
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isFound())
 				.andExpect(jsonPath("$.id").value(testIdValue))
-				.andExpect(jsonPath("$.pw").value(testPasswordValue));
+				.andExpect(jsonPath("$.pw").value(testPasswordValue))
+				.andExpect(jsonPath("$.role").value(testRoleValue));
 	}
 
 	@Test
@@ -120,6 +123,7 @@ public class UserControllerMockTest {
 		UserDTO mockData = new UserDTO();
 		mockData.setId(testIdValue);
 		mockData.setPw(testPasswordValue);
+		mockData.setRole(testRoleValue);
 		return mockData;
 	}
 }
