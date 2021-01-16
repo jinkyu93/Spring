@@ -1,10 +1,9 @@
 package com.jkpark.study.user.controller;
 
-import com.jkpark.study.global.dto.UserDTO;
-import com.jkpark.study.global.service.UserService;
+import com.jkpark.study.global.dto.AccountDTO;
+import com.jkpark.study.global.service.AccountService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,17 +12,15 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @AllArgsConstructor
-public class UserController {
+public class AccountController {
+	private AccountService service;
 
-	//@Autowired
-	private UserService service;
-
-	@GetMapping("/user")
-	public ResponseEntity<UserDTO> getUser(@RequestParam(value = "id", required = true) String id) {
-		UserDTO selectedUser = service.findById(id);
+	@GetMapping("/account")
+	public ResponseEntity<AccountDTO> getUser(@RequestParam(value = "id", required = true) String id) {
+		AccountDTO selectedUser = service.findById(id);
 
 		log.debug("{}", selectedUser);
-		ResponseEntity<UserDTO> responseEntity = selectedUser == null ?
+		ResponseEntity<AccountDTO> responseEntity = selectedUser == null ?
 				new ResponseEntity(null, HttpStatus.NOT_FOUND) :
 				new ResponseEntity(selectedUser, HttpStatus.FOUND);
 
@@ -33,31 +30,31 @@ public class UserController {
 	// response DTO 와 내부 DTO 를 분리하는게 좋을 것 같다.
 	// 내부 DTO 는 모든 property 를 다 가지고
 	// response DTO 는 사용할 property 만을 포함하도록 하게
-	@PostMapping("/user")
-	public ResponseEntity<UserDTO> postUser(@RequestBody UserDTO user) {
-		UserDTO createdUser = service.insert(user);
+	@PostMapping("/account")
+	public ResponseEntity<AccountDTO> postUser(@RequestBody AccountDTO user) {
+		AccountDTO createdUser = service.insert(user);
 
 		log.debug("postUser : {}", user.toString());
 
-		ResponseEntity<UserDTO> responseEntity = createdUser == null ?
+		ResponseEntity<AccountDTO> responseEntity = createdUser == null ?
 				new ResponseEntity(null, HttpStatus.CONFLICT) :
 				new ResponseEntity(createdUser, HttpStatus.CREATED);
 
 		return responseEntity;
 	}
 
-	@PutMapping("/user")
+	@PutMapping("/account")
 	public String putUser() {
 
-		return "User";
+		return "Account";
 	}
 
-	@DeleteMapping("/user")
+	@DeleteMapping("/account")
 	public String deleteUser(@RequestParam(value = "id", required = true) String id) {
 		//service.remove(id);
 
 		//log.debug("deleteUser : {}", id);
 
-		return "User";
+		return "Account";
 	}
 }

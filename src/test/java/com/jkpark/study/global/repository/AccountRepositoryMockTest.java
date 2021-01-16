@@ -1,7 +1,7 @@
 package com.jkpark.study.global.repository;
 
-import com.jkpark.study.global.domain.User;
-import com.jkpark.study.global.domain.UserRole;
+import com.jkpark.study.global.domain.Account;
+import com.jkpark.study.global.domain.Role;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -13,23 +13,23 @@ import static org.mockito.Mockito.when;
 
 @SpringBootTest
 //@Transactional
-public class UserRepositoryMockTest {
+public class AccountRepositoryMockTest {
 	// mock 이 아닌 실제 db 와 테스트 하는 로직 작성 필요
 	@MockBean
-	private UserRepository dao;
+	private AccountRepository dao;
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
-	private final UserRole testRoleValue = UserRole.ADMIN;
+	private final Role testRoleValue = Role.ADMIN;
 
 	@Test
 	public void findByIdSuccess() {
-		User mockData = makeTestUser();
+		Account mockData = makeTestAccount();
 
 		when(dao.findById(testIdValue))
 				.thenReturn(Optional.of(mockData));
 
-		User result = dao.findById(testIdValue).orElse(null);
+		Account result = dao.findById(testIdValue).orElse(null);
 
 		assertEquals(result.getId(), mockData.getId());
 		assertEquals(result.getPw(), mockData.getPw());
@@ -40,19 +40,19 @@ public class UserRepositoryMockTest {
 		when(dao.findById(testIdValue))
 				.thenReturn(Optional.empty());
 
-		User result = dao.findById(testIdValue).orElse(null);
+		Account result = dao.findById(testIdValue).orElse(null);
 
 		assertNull(result);
 	}
 
 	@Test
 	public void saveSuccess() {
-		User mockData = makeTestUser();
+		Account mockData = makeTestAccount();
 
 		when(dao.save(mockData))
 				.thenReturn(mockData);
 
-		User result = dao.save(mockData);
+		Account result = dao.save(mockData);
 
 		assertEquals(result.getUuid(), mockData.getUuid());
 		assertEquals(result.getId(), mockData.getId());
@@ -61,7 +61,7 @@ public class UserRepositoryMockTest {
 
 	@Test
 	public void saveDuplicate() {
-		User mockData = makeTestUser();
+		Account mockData = makeTestAccount();
 
 		when(dao.save(mockData))
 				.thenThrow(IllegalArgumentException.class);
@@ -69,7 +69,7 @@ public class UserRepositoryMockTest {
 		assertThrows(IllegalArgumentException.class, () -> dao.save(mockData));
 	}
 
-	private User makeTestUser() {
-		return new User(testIdValue, testPasswordValue, testRoleValue);
+	private Account makeTestAccount() {
+		return new Account(testIdValue, testPasswordValue, testRoleValue);
 	}
 }

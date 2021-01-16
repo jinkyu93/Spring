@@ -3,6 +3,7 @@ package com.jkpark.study.security.token;
 import com.jkpark.study.security.context.UserContext;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
@@ -16,7 +17,7 @@ public class PostAuthorizationToken extends UsernamePasswordAuthenticationToken 
 		super(principal, credentials, authorities);
 	}
 
-	public static PostAuthorizationToken getTokenFormAccountContext(UserContext context) {
+	public static PostAuthorizationToken getTokenFormAccountContext(User context) {
 
 		return new PostAuthorizationToken(
 				context,

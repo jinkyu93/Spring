@@ -1,9 +1,9 @@
 package com.jkpark.study.user.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jkpark.study.global.domain.UserRole;
-import com.jkpark.study.global.dto.UserDTO;
-import com.jkpark.study.global.service.UserService;
+import com.jkpark.study.global.domain.Role;
+import com.jkpark.study.global.dto.AccountDTO;
+import com.jkpark.study.global.service.AccountService;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
@@ -24,9 +24,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //@SpringBootTest
 //@AutoConfigureMockMvc
-@WebMvcTest(UserController.class)
+@WebMvcTest(AccountController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class UserControllerMockTest {
+public class AccountControllerMockTest {
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -38,7 +38,7 @@ public class UserControllerMockTest {
 	// 전수테스트가 아닌 유닛테스트
 	// Service 가 아닌 Controller 와의 데이터 통신만을 테스트 하기 위한 Unit Test Model
 	@MockBean
-	private UserService service;
+	private AccountService service;
 
 	private ObjectMapper mapper = new ObjectMapper();
 
@@ -50,11 +50,11 @@ public class UserControllerMockTest {
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
-	private final UserRole testRoleValue = UserRole.ADMIN;
+	private final Role testRoleValue = Role.ADMIN;
 
 	@Test
 	public void getUserFound() throws Exception {
-		UserDTO mockData = makeTestUserDTO();
+		AccountDTO mockData = makeTestUserDTO();
 
 		// mock service 에서 반환할 mock data 설정
 		when(service.findById(testIdValue))
@@ -86,10 +86,10 @@ public class UserControllerMockTest {
 
 	@Test
 	public void postUserCreated() throws Exception {
-		UserDTO mockData = makeTestUserDTO();
+		AccountDTO mockData = makeTestUserDTO();
 
 		// mockData 의 eq 를 하면 왜 null 을 return 할까?
-		when(service.insert(any(UserDTO.class)))
+		when(service.insert(any(AccountDTO.class)))
 				.thenReturn(mockData);
 
 		String content = mapper.writeValueAsString(mockData);
@@ -104,9 +104,9 @@ public class UserControllerMockTest {
 
 	@Test
 	public void postUserConflict() throws Exception {
-		UserDTO mockData = makeTestUserDTO();
+		AccountDTO mockData = makeTestUserDTO();
 
-		when(service.insert(any(UserDTO.class)))
+		when(service.insert(any(AccountDTO.class)))
 				.thenReturn(null);
 
 		String content = mapper.writeValueAsString(mockData);
@@ -119,8 +119,8 @@ public class UserControllerMockTest {
 				.andExpect(status().isConflict());
 	}
 
-	private UserDTO makeTestUserDTO() {
-		UserDTO mockData = new UserDTO();
+	private AccountDTO makeTestUserDTO() {
+		AccountDTO mockData = new AccountDTO();
 		mockData.setId(testIdValue);
 		mockData.setPw(testPasswordValue);
 		mockData.setRole(testRoleValue);

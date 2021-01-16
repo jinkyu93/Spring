@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.Transient;
 
+// TODO : 이건 Request/Response DTO 로 들어가야겠다
 @Getter
 @Setter
 @NoArgsConstructor

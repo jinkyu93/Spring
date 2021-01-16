@@ -19,7 +19,6 @@
 * Create Unit Test : Ctrl + Shift + T
 * Move Line Up or Down : Shift + Alt + Up or Down
 
-
 # Terms
 * Domain : Entity
     * DB 와 매칭될 객체

@@ -1,7 +1,7 @@
 package com.jkpark.study.global.dto;
 
-import com.jkpark.study.global.domain.User;
-import com.jkpark.study.global.domain.UserRole;
+import com.jkpark.study.global.domain.Account;
+import com.jkpark.study.global.domain.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,14 +11,14 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-public class UserDTO {
+public class AccountDTO {
 	private String id;
 
 	private String pw;
 
-	private UserRole role;
+	private Role role;
 
-	public User toEntity() {
-		return new User(id, pw, role);
+	public Account toEntity() {
+		return new Account(id, pw, role);
 	}
 }

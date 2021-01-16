@@ -1,6 +1,6 @@
 package com.jkpark.study.global.domain;
 
-public enum UserRole {
+public enum Role {
 	ADMIN,
 	USER
 }

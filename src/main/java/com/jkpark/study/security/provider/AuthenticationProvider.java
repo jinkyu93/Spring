@@ -1,14 +1,12 @@
 package com.jkpark.study.security.provider;
 
-import com.jkpark.study.global.domain.User;
-import com.jkpark.study.global.repository.UserRepository;
-import com.jkpark.study.security.context.UserContext;
+import com.jkpark.study.security.service.UserDetailsService;
 import com.jkpark.study.security.token.PostAuthorizationToken;
 import com.jkpark.study.security.token.PreAuthorizationToken;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -17,7 +15,7 @@ import java.util.NoSuchElementException;
 @AllArgsConstructor
 public class AuthenticationProvider implements org.springframework.security.authentication.AuthenticationProvider {
 
-	private UserRepository accountRepository;
+	private UserDetailsService userDetailsService;
 
 	//private BCryptPasswordEncoder passwordEncoder;
 
@@ -28,14 +26,10 @@ public class AuthenticationProvider implements org.springframework.security.auth
 		String username = token.getUsername();
 		String password = token.getUserPassword();
 
-		// TODO : error 발생 시 log 및 예외처리
-		User user = accountRepository
-				.findById(username)
-				.orElseThrow(() -> new NoSuchElementException("정보에 맞는 계정이 없습니다."));
+		User user = (User) userDetailsService.loadUserByUsername(username);
 
 		if(isCorrectPassword(password, user)) {
-			return PostAuthorizationToken
-					.getTokenFormAccountContext(UserContext.fromAccountModel(user));
+			return PostAuthorizationToken.getTokenFormAccountContext(user);
 		}
 
 		// 이곳까지 통과하지 못하면 잘못된 요청으로 접근하지 못한것 그러므로 throw 해줘야 한다.
@@ -47,9 +41,9 @@ public class AuthenticationProvider implements org.springframework.security.auth
 		return PreAuthorizationToken.class.isAssignableFrom(authentication);
 	}
 
-	private boolean isCorrectPassword(String password, User account) {
+	private boolean isCorrectPassword(String password, User user) {
 		// 비교대상이 앞에와야 한다.
 		//return passwordEncoder.matches(password, account.getPw());
-		return password.equals(account.getPw());
+		return password.equals(user.getPassword());
 	}
 }

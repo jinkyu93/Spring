@@ -13,11 +13,11 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtFactory {
-	// TODO : config 로 빼기
+	// TODO : config 로 빼기 (application.yml)
 	private static final long ExpiredTime = 864000000;
 	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-	public String generateToken(UserContext account) {
+	public String generateToken(UserContext userContext) {
 		String jws = null;
 
 		// TODO : try resource 로 바꿔보기
@@ -25,8 +25,8 @@ public class JwtFactory {
 			jws = Jwts.builder()
 					.setIssuer("jkpark")
 					.setHeaderParam("typ", "JWT")
-					.setId(account.getUser().getId())
-					.claim("role", account.getUser().getRole())
+					.setId(userContext.getAccount().getId())
+					.claim("role", userContext.getAccount().getRole())
 					.setIssuedAt(new Date())
 					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTime))
 					.signWith(key).compact();

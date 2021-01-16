@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 // WebSecurityConfigurerAdapter 를 상속받은 Class 에
-// 아래 annotation 을 추가하면 SpringSecurityFilterChain 에 포함된다.
+// @EnableWebSecurity annotation 을 추가하면 SpringSecurityFilterChain 에 포함된다.
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -32,8 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
+	// TODO : Refresh Filter 도 만들어서 등록해야한다 /user/refresh?
 	protected AuthenticationFilter loginFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter("/user/login", loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+		AuthenticationFilter filter = new AuthenticationFilter("/account/login", loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(super.authenticationManagerBean());
 
 		return filter;
@@ -46,16 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http
-				.csrf()
-				.disable();
+		http.csrf()
+			.disable();
 
-		http
-				.headers()
-				.frameOptions()
-				.disable();
+		http.headers()
+			.frameOptions()
+			.disable();
 
-		http
-				.addFilterBefore(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(loginFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

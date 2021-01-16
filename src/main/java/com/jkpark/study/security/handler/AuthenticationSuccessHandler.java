@@ -40,7 +40,7 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
 
 		String tokenString = factory.generateToken(context);
 
-		String userId = token.getAccountContext().getUser().getId();
+		String userId = token.getAccountContext().getAccount().getId();
 
 		processResponse(res, writeDto(tokenString, userId));
 	}

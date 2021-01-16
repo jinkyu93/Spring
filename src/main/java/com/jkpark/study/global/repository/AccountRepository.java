@@ -1,11 +1,11 @@
 package com.jkpark.study.global.repository;
 
-import com.jkpark.study.global.domain.User;
+import com.jkpark.study.global.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 import java.util.UUID;
 
-public interface UserRepository extends JpaRepository<User, UUID> {
-	Optional<User> findById(String id);
+public interface AccountRepository extends JpaRepository<Account, UUID>{
+	Optional<Account> findById(String id);
 }
