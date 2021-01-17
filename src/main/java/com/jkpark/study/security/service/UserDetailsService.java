@@ -18,15 +18,11 @@ public class UserDetailsService implements org.springframework.security.core.use
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		AccountDTO dto = null;
+		AccountDTO dto = accountService.findById(username);
 
-		try {
-			dto = accountService.findById(username);
-		} catch (Exception e) {
-			log.warn(e.getMessage());
-			throw new UsernameNotFoundException(e.getMessage());
+		if(dto == null) {
+			dto = new AccountDTO();
 		}
-
-		return UserContext.fromAccountModel(dto.toEntity());
+		return UserContext.fromAccountModel(dto);
 	}
 }

@@ -2,10 +2,12 @@ package com.jkpark.study.security.context;
 
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
+import com.jkpark.study.global.dto.AccountDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -13,20 +15,19 @@ import java.util.stream.Collectors;
 
 // service 의 dto 와 security 의 User 객체를 연결하는 class
 public class UserContext extends User {
-	private Account account;
+	private AccountDTO dto;
 
-	private UserContext(Account account, String username, String password, Collection<? extends GrantedAuthority> authorities) {
+	private UserContext(AccountDTO dto, String username, String password, Collection<? extends GrantedAuthority> authorities) {
 		super(username, password, authorities);
-		this.account = account;
+		this.dto = dto;
 	}
 
-	public static UserContext fromAccountModel(Account account) {
-		// Role 설정에 대한 분석 필요
+	public static UserContext fromAccountModel(AccountDTO dto) {
 		return new UserContext(
-				account,
-				account.getId(),
-				account.getPw(),
-				userRoleList(account.getRole())
+				dto,
+				dto.getId(),
+				dto.getPw(),
+				userRoleList(dto.getRole())
 		);
 	}
 
@@ -39,7 +40,7 @@ public class UserContext extends User {
 				);
 	}
 
-	public final Account getAccount() {
-		return account;
+	public final AccountDTO getAccountDTO() {
+		return dto;
 	}
 }

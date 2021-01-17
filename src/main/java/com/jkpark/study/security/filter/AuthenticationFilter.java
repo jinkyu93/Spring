@@ -1,7 +1,7 @@
 package com.jkpark.study.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jkpark.study.global.dto.AuthenticationDTO;
+import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.security.handler.AuthenticationFailureHandler;
 import com.jkpark.study.security.handler.AuthenticationSuccessHandler;
 import com.jkpark.study.security.token.PreAuthorizationToken;
@@ -40,7 +40,7 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 	public Authentication attemptAuthentication(
 			HttpServletRequest req,
 			HttpServletResponse res) throws AuthenticationException, IOException, ServletException {
-		AuthenticationDTO dto = new ObjectMapper().readValue(req.getReader(), AuthenticationDTO.class);
+		AccountDTO dto = new ObjectMapper().readValue(req.getReader(), AccountDTO.class);
 		PreAuthorizationToken token = new PreAuthorizationToken(dto);
 
 		// PreAuthorizationToken 해당 객체에 맞는 Provider 를

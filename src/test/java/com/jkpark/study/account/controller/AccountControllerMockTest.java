@@ -1,4 +1,4 @@
-package com.jkpark.study.user.controller;
+package com.jkpark.study.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.global.domain.Role;

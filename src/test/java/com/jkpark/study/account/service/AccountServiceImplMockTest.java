@@ -1,4 +1,4 @@
-package com.jkpark.study.user.service;
+package com.jkpark.study.account.service;
 
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;

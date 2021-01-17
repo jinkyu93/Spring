@@ -1,6 +1,6 @@
 package com.jkpark.study.security.token;
 
-import com.jkpark.study.global.dto.AuthenticationDTO;
+import com.jkpark.study.global.dto.AccountDTO;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class PreAuthorizationToken extends UsernamePasswordAuthenticationToken {
@@ -9,7 +9,7 @@ public class PreAuthorizationToken extends UsernamePasswordAuthenticationToken {
 		super(username, password);
 	}
 
-	public PreAuthorizationToken(AuthenticationDTO dto) {
+	public PreAuthorizationToken(AccountDTO dto) {
 		this(dto.getId(), dto.getPw());
 	}
 

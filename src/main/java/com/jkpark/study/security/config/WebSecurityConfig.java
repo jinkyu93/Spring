@@ -20,9 +20,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+	private final String loginUrl = "/account/login";
+	private final String refreshUrl = "/account/refresh";
 
 	private AuthenticationSuccessHandler loginAuthenticationSuccessHandler;
 	private AuthenticationFailureHandler loginAuthenticationFailureHandler;
+	private AuthenticationSuccessHandler refreshAuthenticationSuccessHandler;
+	private AuthenticationFailureHandler refreshAuthenticationFailureHandler;
 
 	private AuthenticationProvider provider;
 
@@ -32,9 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	// TODO : Refresh Filter 도 만들어서 등록해야한다 /user/refresh?
-	protected AuthenticationFilter loginFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter("/account/login", loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+	protected AuthenticationFilter getLoginFilter() throws Exception {
+		AuthenticationFilter filter = new AuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+		filter.setAuthenticationManager(super.authenticationManagerBean());
+
+		return filter;
+	}
+
+	protected AuthenticationFilter getRefreshFilter() throws Exception {
+		AuthenticationFilter filter = new AuthenticationFilter(refreshUrl, refreshAuthenticationSuccessHandler, refreshAuthenticationFailureHandler);
 		filter.setAuthenticationManager(super.authenticationManagerBean());
 
 		return filter;
@@ -54,6 +64,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.frameOptions()
 			.disable();
 
-		http.addFilterBefore(loginFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+		// TODO : Refresh Filter 만들기
+		//http.addFilterBefore(getRefreshFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

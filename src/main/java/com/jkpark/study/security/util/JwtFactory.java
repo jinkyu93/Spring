@@ -14,10 +14,11 @@ import java.util.Date;
 @Component
 public class JwtFactory {
 	// TODO : config 로 빼기 (application.yml)
-	private static final long ExpiredTime = 864000000;
+	private static final long ExpiredTimeForAuthenticationToken = 14400000;
+	private static final long ExpiredTimeForRefreshToken = 864000000;
 	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-	public String generateToken(UserContext userContext) {
+	public String generateAuthenticationToken(UserContext userContext) {
 		String jws = null;
 
 		// TODO : try resource 로 바꿔보기
@@ -25,10 +26,30 @@ public class JwtFactory {
 			jws = Jwts.builder()
 					.setIssuer("jkpark")
 					.setHeaderParam("typ", "JWT")
-					.setId(userContext.getAccount().getId())
-					.claim("role", userContext.getAccount().getRole())
+					.setId(userContext.getAccountDTO().getId())
+					.claim("role", userContext.getAccountDTO().getRole())
 					.setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTime))
+					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTimeForAuthenticationToken))
+					.signWith(key).compact();
+		} catch(Exception e) {
+			log.error(e.getMessage());
+		} finally {
+			return jws;
+		}
+	}
+
+	public String generateRefreshToken(UserContext userContext) {
+		String jws = null;
+
+		// TODO : try resource 로 바꿔보기
+		try {
+			jws = Jwts.builder()
+					.setIssuer("jkpark")
+					.setHeaderParam("typ", "JWT")
+					.setId(userContext.getAccountDTO().getId())
+					.claim("role", userContext.getAccountDTO().getRole())
+					.setIssuedAt(new Date())
+					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTimeForRefreshToken))
 					.signWith(key).compact();
 		} catch(Exception e) {
 			log.error(e.getMessage());

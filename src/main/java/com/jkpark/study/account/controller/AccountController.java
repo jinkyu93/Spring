@@ -1,4 +1,4 @@
-package com.jkpark.study.user.controller;
+package com.jkpark.study.account.controller;
 
 import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
