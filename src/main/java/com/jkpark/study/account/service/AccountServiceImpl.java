@@ -6,6 +6,7 @@ import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.repository.AccountRepository;
 import com.jkpark.study.global.service.AccountService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -14,6 +15,8 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AccountServiceImpl implements AccountService {
 	private AccountRepository dao;
+
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public AccountDTO insert(AccountDTO account) {
@@ -24,6 +27,11 @@ public class AccountServiceImpl implements AccountService {
 		if(selectedAccount != null) {
 			return new AccountDTO("", "", Role.USER);
 		}
+
+		// encoding 을 insert 시에만 하면 되는가?
+		String rawPw = account.getPw();
+		String encodedPw = passwordEncoder.encode(rawPw);
+		account.setPw(encodedPw);
 
 		Account createdAccount = dao.save(account.toEntity());
 

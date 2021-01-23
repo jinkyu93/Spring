@@ -18,7 +18,7 @@ public class JwtFactory {
 	private static final long ExpiredTimeForRefreshToken = 864000000;
 	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
-	public String generateAuthenticationToken(UserContext userContext) {
+	public String generateAccessToken(UserContext userContext) {
 		String jws = null;
 
 		// TODO : try resource 로 바꿔보기
@@ -39,6 +39,9 @@ public class JwtFactory {
 	}
 
 	public String generateRefreshToken(UserContext userContext) {
+		return "";
+
+		/*
 		String jws = null;
 
 		// TODO : try resource 로 바꿔보기
@@ -56,5 +59,6 @@ public class JwtFactory {
 		} finally {
 			return jws;
 		}
+		 */
 	}
 }

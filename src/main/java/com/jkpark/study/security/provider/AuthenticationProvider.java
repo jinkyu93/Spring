@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
@@ -17,7 +18,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
 
 	private UserDetailsService userDetailsService;
 
-	//private BCryptPasswordEncoder passwordEncoder;
+	private BCryptPasswordEncoder passwordEncoder;
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
@@ -42,8 +43,6 @@ public class AuthenticationProvider implements org.springframework.security.auth
 	}
 
 	private boolean isCorrectPassword(String password, User user) {
-		// 비교대상이 앞에와야 한다.
-		//return passwordEncoder.matches(password, account.getPw());
-		return password.equals(user.getPassword());
+		return passwordEncoder.matches(password, user.getPassword());
 	}
 }

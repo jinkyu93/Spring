@@ -38,16 +38,16 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
 		PostAuthorizationToken token = (PostAuthorizationToken) auth;
 		UserContext context = (UserContext) token.getPrincipal();
 
-		String authenticationToken = factory.generateAuthenticationToken(context);
+		String accessToken = factory.generateAccessToken(context);
 		String refreshToken = factory.generateRefreshToken(context);
 
 		String userId = token.getAccountContext().getAccountDTO().getId();
 
-		processResponse(res, writeDto(authenticationToken, refreshToken, userId));
+		processResponse(res, writeDto(accessToken, refreshToken, userId));
 	}
 
-	private TokenDTO writeDto(String authenticationToken, String refreshToken, String userId) {
-		return new TokenDTO(authenticationToken, refreshToken, userId);
+	private TokenDTO writeDto(String accessToken, String refreshToken, String userId) {
+		return new TokenDTO(accessToken, refreshToken, userId);
 	}
 
 	private void processResponse(HttpServletResponse res, TokenDTO dto) throws JsonProcessingException, IOException {

@@ -17,6 +17,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 // WebSecurityConfigurerAdapter 를 상속받은 Class 에
 // @EnableWebSecurity annotation 을 추가하면 SpringSecurityFilterChain 에 포함된다.
+// SpringSecurityFilterChain 은 DelegatingFilterProxy 에서 동작하는데 이놈은 DispatcherServlet 보다 먼저 만나는 놈이다.
 @EnableWebSecurity
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
@@ -38,14 +39,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	protected AuthenticationFilter getLoginFilter() throws Exception {
 		AuthenticationFilter filter = new AuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
-		filter.setAuthenticationManager(super.authenticationManagerBean());
+		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
 
 	protected AuthenticationFilter getRefreshFilter() throws Exception {
 		AuthenticationFilter filter = new AuthenticationFilter(refreshUrl, refreshAuthenticationSuccessHandler, refreshAuthenticationFailureHandler);
-		filter.setAuthenticationManager(super.authenticationManagerBean());
+		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
@@ -66,6 +67,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
 		// TODO : Refresh Filter 만들기
+		// 나중에 하자...
+		// refresh token 은 유효기간이 길기 때문에
+		// 보안관련해서 신경쓸게 많다
+		// ex) client side : http only cookie
+		// ex) server side : refresh token 을 db 에 저장
+		// source : https://medium.com/@d971106b/%EC%82%BD%EC%A7%88%EA%B8%B0%EB%A1%9D-%EB%A1%9C%EA%B7%B8%EC%9D%B8-api-%EC%9E%91%EC%84%B1-jwt-refresh-token-access-token-http-only-92570160fa1c
 		//http.addFilterBefore(getRefreshFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

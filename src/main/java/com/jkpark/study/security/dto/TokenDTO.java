@@ -9,14 +9,14 @@ import lombok.Setter;
 @NoArgsConstructor
 public class TokenDTO {
 
-	private String authenticationToken;
+	private String accessToken;
 
 	private String refreshToken;
 
 	private String id;
 
-	public TokenDTO(String authenticationToken, String refreshToken, String id) {
-		this.authenticationToken = authenticationToken;
+	public TokenDTO(String accessToken, String refreshToken, String id) {
+		this.accessToken = accessToken;
 		this.refreshToken = refreshToken;
 		this.id = id;
 	}

@@ -1,10 +1,12 @@
-package com.jkpark.study.global.repository;
+package com.jkpark.study.account.repository;
 
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
+import com.jkpark.study.global.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
@@ -17,6 +19,8 @@ public class AccountRepositoryMockTest {
 	// mock 이 아닌 실제 db 와 테스트 하는 로직 작성 필요
 	@MockBean
 	private AccountRepository dao;
+
+	private BCryptPasswordEncoder passwordEncoder;
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
@@ -70,6 +74,6 @@ public class AccountRepositoryMockTest {
 	}
 
 	private Account makeTestAccount() {
-		return new Account(testIdValue, testPasswordValue, testRoleValue);
+		return new Account(testIdValue, passwordEncoder.encode(testPasswordValue), testRoleValue);
 	}
 }

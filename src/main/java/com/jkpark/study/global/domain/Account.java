@@ -11,7 +11,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "USER")
+@Table(name = "ACCOUNT")
 @Entity
 public class Account {
 	// means public key
