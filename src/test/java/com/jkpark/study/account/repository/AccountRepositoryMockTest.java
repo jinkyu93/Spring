@@ -20,7 +20,8 @@ public class AccountRepositoryMockTest {
 	@MockBean
 	private AccountRepository dao;
 
-	private BCryptPasswordEncoder passwordEncoder;
+	// test 로직도 bean 을 만들어야되나?
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
 
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";

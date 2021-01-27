@@ -22,10 +22,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-//@SpringBootTest
-//@AutoConfigureMockMvc
 @WebMvcTest(AccountController.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AccountControllerMockTest {
 
 	@Autowired
