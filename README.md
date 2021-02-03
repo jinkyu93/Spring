@@ -15,7 +15,7 @@
 * h2database
 * Jackson
 
-# Shot Cut
+# Shortcut
 * Create Unit Test : Ctrl + Shift + T
 * Move Line Up or Down : Shift + Alt + Up or Down
 

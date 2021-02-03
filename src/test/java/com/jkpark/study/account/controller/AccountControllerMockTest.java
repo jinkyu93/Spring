@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
-import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -22,7 +22,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(AccountController.class)
+// webmvctest 는 spring context 를 전체 다 조회하고 bean 을 만들어 주지 않는다
+// 때문에 Spring Security 의 Filter 가 등록될 때 있어야 할 bean 들이 만들어 지지 않는다.
+// 해당 부분을 Scan 할 필요가 있다.
+//@WebMvcTest(AccountController.class)
+@SpringBootTest
+@AutoConfigureMockMvc(addFilters = false)
 public class AccountControllerMockTest {
 
 	@Autowired
@@ -39,7 +44,7 @@ public class AccountControllerMockTest {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	private final String urlTemplate = "/user";
+	private final String urlTemplate = "/account";
 
 	// nameof 키워드와 같은게 없다...
 	private final String testIdKey = "id";
@@ -48,6 +53,8 @@ public class AccountControllerMockTest {
 	private final String testIdValue = "admin";
 	private final String testPasswordValue = "pass";
 	private final Role testRoleValue = Role.ADMIN;
+
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
 
 	@Test
 	public void getUserFound() throws Exception {
@@ -65,9 +72,9 @@ public class AccountControllerMockTest {
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isFound())
-				.andExpect(jsonPath("$.id").value(testIdValue))
-				.andExpect(jsonPath("$.pw").value(testPasswordValue))
-				.andExpect(jsonPath("$.role").value(testRoleValue));
+				.andExpect(jsonPath("$.id").value(mockData.getId()))
+				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
+				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()));
 	}
 
 	@Test
@@ -119,7 +126,7 @@ public class AccountControllerMockTest {
 	private AccountDTO makeTestUserDTO() {
 		AccountDTO mockData = new AccountDTO();
 		mockData.setId(testIdValue);
-		mockData.setPw(testPasswordValue);
+		mockData.setPw(passwordEncoder.encode(testPasswordValue));
 		mockData.setRole(testRoleValue);
 		return mockData;
 	}
