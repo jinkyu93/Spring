@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- document : https://logging.apache.org/log4j/2.x/manual -->
+
+<Configuration status="INFO">
+    // variable values for this xml settings.
+    // it can be used like "${variable value name}"
+    <Properties>
+        <Property name="logFileName">jkpark_test_log</Property>
+        <Property name="layoutPattern">-%style{%d{yyyy/MM/dd HH:mm:ss.SSS}}{cyan} %highlight{[%-5p]}{FATAL=bg_red, ERROR=red, INFO=green, DEBUG=blue} %style{[%t]}{yellow} [%C %M] - %m%n</Property>
+    </Properties>
+
+    // it shows where logs are written
+    // type : Console, File, RollingFile, JDBC
+    <Appenders>
+        <Console name="Console_Appender" target="SYSTEM_OUT">
+            <PatternLayout pattern="${layoutPattern}"  disableAnsi="false"/>
+        </Console>
+        // %d : SimpleDateFormat
+        // %i : integer value for numbering
+        <RollingFile name="File_Appender" fileName="logs/${logFileName}.log" filePattern="logs/%d{yyyy-MM-dd}/${logFileName}_%d{yyyy-MM-dd}_%i.log.gz">
+            <PatternLayout pattern="${layoutPattern}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20KB"/>
+                // interval : how often a rollover should occur based on minimal time format of file pattern.
+                <TimeBasedTriggeringPolicy interval="1"/>
+            </Policies>
+            // max : the max count of log files for rolling
+            // fileIndex
+            //      max(default) : higher index file is newer
+            //      min : lower index file is newer
+            <DefaultRolloverStrategy max="10" fileIndex="max"/>
+        </RollingFile>
+    </Appenders>
+
+    // owners of logging
+    // Root : default logger
+    // Logger : logger for the package name of my choice
+    <Loggers>
+        // additivity : each logger save duplicate logs
+        <Root level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender"/>
+            <AppenderRef ref="File_Appender"/>
+        </Root>
+        // name : target package name
+        <Logger name="com.jkpark.study" level="DEBUG" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+            <AppenderRef ref="File_Appender"/>
+        </Logger>
+        <!--
+        <Logger name="com.fucct" level="INFO" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+            <AppenderRef ref="File_Appender"/>
+        </Logger>
+        <Logger name="com.fucct.springlog4j2.loggertest" level="TRACE" additivity="false">
+            <AppenderRef ref="Console_Appender" />
+        </Logger>
+        -->
+    </Loggers>
+</Configuration>
