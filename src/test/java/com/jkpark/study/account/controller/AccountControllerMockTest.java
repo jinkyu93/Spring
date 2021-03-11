@@ -6,6 +6,7 @@ import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,6 +18,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@WebMvcTest(AccountController.class)
 @SpringBootTest
 @AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureRestDocs
 public class AccountControllerMockTest {
 
 	@Autowired
@@ -66,15 +69,15 @@ public class AccountControllerMockTest {
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 
-		// jsonPath 에 하드코딩된 key 를 동적으로 바꿀 수 있는 방법 고민 필요
-		// 안그러면 client 에 보내는 response dto 의 모습이 변할 때 마다 test 도 변경해야한다.
-		// 점심 나가서 먹을 거 같아~~~
+		// 더 좋은방법 찾기
+		// model 의 변경에 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isFound())
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
-				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()));
+				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()))
+				.andDo(document("user/get/success"));
 	}
 
 	@Test
@@ -85,7 +88,8 @@ public class AccountControllerMockTest {
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isNotFound());
+				.andExpect(status().isNotFound())
+				.andDo(document("user/get/failure"));
 	}
 
 	@Test
@@ -103,7 +107,8 @@ public class AccountControllerMockTest {
 								.content(content);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isCreated());
+				.andExpect(status().isCreated())
+				.andDo(document("user/post/success"));
 	}
 
 	@Test
@@ -120,7 +125,8 @@ public class AccountControllerMockTest {
 				.content(content);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isConflict());
+				.andExpect(status().isConflict())
+				.andDo(document("user/post/failure"));
 	}
 
 	private AccountDTO makeTestUserDTO() {

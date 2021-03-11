@@ -1,0 +1,25 @@
+= User
+
+== Get user information success
+=== Request
+include::{snippets}/user/get/success/http-request.adoc[]
+=== Response
+include::{snippets}/user/get/success/http-response.adoc[]
+
+== Get user information failure
+=== Request
+include::{snippets}/user/get/failure/http-request.adoc[]
+=== Response
+include::{snippets}/user/get/failure/http-response.adoc[]
+
+== User sign up success
+=== Request
+include::{snippets}/user/post/success/http-request.adoc[]
+=== Response
+include::{snippets}/user/post/success/http-response.adoc[]
+
+== User sign up failure
+=== Request
+include::{snippets}/user/post/failure/http-request.adoc[]
+=== Response
+include::{snippets}/user/post/failure/http-response.adoc[]
