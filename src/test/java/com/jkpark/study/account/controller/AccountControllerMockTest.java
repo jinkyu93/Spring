@@ -73,7 +73,7 @@ public class AccountControllerMockTest {
 		// model 의 변경에 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isFound())
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
 				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()))

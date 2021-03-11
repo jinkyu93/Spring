@@ -22,7 +22,7 @@ public class AccountController {
 		log.debug("getAccount : {}", selectedUser);
 		ResponseEntity<AccountDTO> responseEntity = selectedUser == null ?
 				new ResponseEntity(null, HttpStatus.NOT_FOUND) :
-				new ResponseEntity(selectedUser, HttpStatus.FOUND);
+				new ResponseEntity(selectedUser, HttpStatus.OK);
 
 		return responseEntity;
 	}
