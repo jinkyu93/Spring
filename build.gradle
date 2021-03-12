@@ -71,11 +71,18 @@ ext {
 	snippetsDir = file('build/generated-snippets')
 }
 
-bootJar {
+task copyDocument(type: Copy) {
 	dependsOn asciidoctor
-	from("${asciidoctor.outputDir}/html5") {
-		into 'static/docs'
-	}
+	from file("${asciidoctor.outputDir}/html5")
+	into file("static/docs")
+}
+
+build {
+	dependsOn copyDocument
+}
+
+bootJar {
+	dependsOn copyDocument
 }
 
 asciidoctor {
