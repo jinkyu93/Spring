@@ -65,6 +65,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.frameOptions()
 			.disable();
 
+		http.authorizeRequests()
+			.antMatchers("/account/**").permitAll()
+			.antMatchers("/**").authenticated();
+
 		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
 		// TODO : Refresh Filter 만들기
 		// 나중에 하자...
