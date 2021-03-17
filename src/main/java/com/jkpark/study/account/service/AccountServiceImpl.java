@@ -1,5 +1,6 @@
 package com.jkpark.study.account.service;
 
+import com.jkpark.study.account.exception.UserNotFoundException;
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
@@ -41,7 +42,7 @@ public class AccountServiceImpl implements AccountService {
 	@Override
 	public AccountDTO findById(String id) {
 		Optional<Account> optionalAccount = dao.findById(id);
-		Account selectedAccount = optionalAccount.orElse(new Account("", "", Role.USER));
+		Account selectedAccount = optionalAccount.orElseThrow(UserNotFoundException::new);
 		return userToUserDTO(selectedAccount);
 	}
 

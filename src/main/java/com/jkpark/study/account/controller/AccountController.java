@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @AllArgsConstructor
 public class AccountController {
+	public static String ACCOUNT_PATH = "/account";
+
 	private AccountService service;
 
 	@GetMapping("/account")
@@ -20,16 +22,9 @@ public class AccountController {
 		AccountDTO selectedUser = service.findById(id);
 
 		log.debug("getAccount : {}", selectedUser);
-		ResponseEntity<AccountDTO> responseEntity = selectedUser == null ?
-				new ResponseEntity(null, HttpStatus.NOT_FOUND) :
-				new ResponseEntity(selectedUser, HttpStatus.OK);
-
-		return responseEntity;
+		return ResponseEntity.ok(selectedUser);
 	}
 
-	// response DTO 와 내부 DTO 를 분리하는게 좋을 것 같다.
-	// 내부 DTO 는 모든 property 를 다 가지고
-	// response DTO 는 사용할 property 만을 포함하도록 하게
 	@PostMapping("/account")
 	public ResponseEntity<AccountDTO> postAccount(@RequestBody AccountDTO user) {
 		AccountDTO createdUser = service.insert(user);
