@@ -1,6 +1,8 @@
 package com.jkpark.study.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jkpark.study.account.exception.AccountConflictException;
+import com.jkpark.study.account.exception.AccountNotFoundException;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
@@ -47,7 +49,7 @@ public class AccountControllerMockTest {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	private final String urlTemplate = "/account";
+	private final String urlTemplate = AccountController.ACCOUNT_PATH;
 
 	// nameof 키워드와 같은게 없다...
 	private final String testIdKey = "id";
@@ -69,7 +71,8 @@ public class AccountControllerMockTest {
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 
-		// 더 좋은방법 찾기
+		// TODO : 더 좋은방법 찾기
+		// 상수를 사용하는게 아니라
 		// model 의 변경에 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
@@ -77,19 +80,19 @@ public class AccountControllerMockTest {
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
 				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()))
-				.andDo(document("user/get/success"));
+				.andDo(document("account/get/success"));
 	}
 
 	@Test
 	public void getUserNotFound() throws Exception {
 		when(service.findById(testIdValue))
-				.thenReturn(null);
+				.thenThrow(new AccountNotFoundException());
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isNotFound())
-				.andDo(document("user/get/failure"));
+				.andDo(document("account/get/failure"));
 	}
 
 	@Test
@@ -107,8 +110,8 @@ public class AccountControllerMockTest {
 								.content(content);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isCreated())
-				.andDo(document("user/post/success"));
+				.andExpect(status().isOk())
+				.andDo(document("account/post/success"));
 	}
 
 	@Test
@@ -116,7 +119,7 @@ public class AccountControllerMockTest {
 		AccountDTO mockData = makeTestUserDTO();
 
 		when(service.insert(any(AccountDTO.class)))
-				.thenReturn(null);
+				.thenThrow(new AccountConflictException());
 
 		String content = mapper.writeValueAsString(mockData);
 
@@ -126,7 +129,7 @@ public class AccountControllerMockTest {
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isConflict())
-				.andDo(document("user/post/failure"));
+				.andDo(document("account/post/failure"));
 	}
 
 	private AccountDTO makeTestUserDTO() {

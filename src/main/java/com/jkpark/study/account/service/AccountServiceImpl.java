@@ -1,6 +1,7 @@
 package com.jkpark.study.account.service;
 
-import com.jkpark.study.account.exception.UserNotFoundException;
+import com.jkpark.study.account.exception.AccountConflictException;
+import com.jkpark.study.account.exception.AccountNotFoundException;
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
@@ -26,7 +27,7 @@ public class AccountServiceImpl implements AccountService {
 
 		// 이런 null 체크 로직을 줄일 수 있는 방법이 없을까
 		if(selectedAccount != null) {
-			return new AccountDTO("", "", Role.USER);
+			throw new AccountConflictException();
 		}
 
 		// encoding 을 insert 시에만 하면 되는가?
@@ -36,23 +37,21 @@ public class AccountServiceImpl implements AccountService {
 
 		Account createdAccount = dao.save(account.toEntity());
 
-		return userToUserDTO(createdAccount);
+		return accountToAccountDTO(createdAccount);
 	}
 
 	@Override
 	public AccountDTO findById(String id) {
 		Optional<Account> optionalAccount = dao.findById(id);
-		Account selectedAccount = optionalAccount.orElseThrow(UserNotFoundException::new);
-		return userToUserDTO(selectedAccount);
+		Account selectedAccount = optionalAccount.orElseThrow(AccountNotFoundException::new);
+		return accountToAccountDTO(selectedAccount);
 	}
 
-	private AccountDTO userToUserDTO(Account selectedAccount) {
-		String id = Optional.of(selectedAccount.getId()).orElse("");
-		String pw = Optional.of(selectedAccount.getPw()).orElse("");
-		Role role = Optional.of(selectedAccount.getRole()).orElse(Role.USER);
+	private AccountDTO accountToAccountDTO(Account selectedAccount) {
+		String id = selectedAccount.getId();
+		String pw = selectedAccount.getPw();
+		Role role = selectedAccount.getRole();
 
-		AccountDTO dto = new AccountDTO(id, pw, role);
-
-		return dto;
+		return new AccountDTO(id, pw, role);
 	}
 }

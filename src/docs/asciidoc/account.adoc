@@ -1,0 +1,25 @@
+= Account
+
+== Get account information success
+=== Request
+include::{snippets}/account/get/success/http-request.adoc[]
+=== Response
+include::{snippets}/account/get/success/http-response.adoc[]
+
+== Get account information failure
+=== Request
+include::{snippets}/account/get/failure/http-request.adoc[]
+=== Response
+include::{snippets}/account/get/failure/http-response.adoc[]
+
+== Account sign up success
+=== Request
+include::{snippets}/account/post/success/http-request.adoc[]
+=== Response
+include::{snippets}/account/post/success/http-response.adoc[]
+
+== Account sign up failure
+=== Request
+include::{snippets}/account/post/failure/http-request.adoc[]
+=== Response
+include::{snippets}/account/post/failure/http-response.adoc[]
