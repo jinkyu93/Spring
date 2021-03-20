@@ -38,7 +38,7 @@ public class AccountController {
 		// request 가 늘어날 경우를 대비해서 builder, joiner 등 성능을 우선으로 하느냐
 		// 고민 필요
 		// var body = StringUtils.arrayToDelimitedString(new Object[] {"account", createdUser.getId(),  "is created"}, " ");
-		var body = String.format("account $s is created", createdUser.getId());
+		var body = String.format("account %1$s is created", createdUser.getId());
 		return new ResponseEntity(body, HttpStatus.OK);
 	}
 

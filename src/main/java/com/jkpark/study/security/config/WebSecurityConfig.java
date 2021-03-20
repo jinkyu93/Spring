@@ -68,6 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		http.authorizeRequests()
 			.antMatchers("/account/**").permitAll() // 회원가입 등
 			.antMatchers("/docs/**").permitAll() // rest docs
+			.antMatchers("/h2-console/**").permitAll() // /h2-console 용
 			.antMatchers("/**").authenticated();
 
 		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
