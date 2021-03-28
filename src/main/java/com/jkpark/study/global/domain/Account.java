@@ -34,7 +34,7 @@ public class Account {
 	@Enumerated(value = EnumType.STRING)
 	private Role role;
 
-	// @Builder 를 사용해서 얻는 장점은?
+	// TODO : @Builder 를 사용해서 얻는 장점은?
 	// 밖에서 new 로 생성하는 것과의 차이 찾아보기
 	public Account(String id, String pw, Role role) {
 		this.uuid = UUID.randomUUID();

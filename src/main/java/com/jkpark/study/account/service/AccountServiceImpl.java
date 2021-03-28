@@ -22,22 +22,27 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public AccountDTO insert(AccountDTO account) {
-		// need to encrypt the password
+		checkAccountIsExist(account);
+		encodePassword(account);
+		Account createdAccount = dao.save(account.toEntity());
+
+		return accountToAccountDTO(createdAccount);
+	}
+
+	private void encodePassword(AccountDTO account) {
+		// encoding 을 insert 시에만 하면 되는가?
+		String rawPw = account.getPw();
+		String encodedPw = passwordEncoder.encode(rawPw);
+		account.setPw(encodedPw);
+	}
+
+	private void checkAccountIsExist(AccountDTO account) {
 		Account selectedAccount = dao.findById(account.getId()).orElse(null);
 
 		// 이런 null 체크 로직을 줄일 수 있는 방법이 없을까
 		if(selectedAccount != null) {
 			throw new AccountConflictException();
 		}
-
-		// encoding 을 insert 시에만 하면 되는가?
-		String rawPw = account.getPw();
-		String encodedPw = passwordEncoder.encode(rawPw);
-		account.setPw(encodedPw);
-
-		Account createdAccount = dao.save(account.toEntity());
-
-		return accountToAccountDTO(createdAccount);
 	}
 
 	@Override
