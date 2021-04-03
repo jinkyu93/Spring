@@ -63,6 +63,7 @@ public class AccountServiceImplMockTest {
 		AccountDTO mockData = makeTestAccountDTO();
 		AccountDTO encodedMockData = makeTestEncodedAccountDTO();
 
+		// TODO : 한 줄씩 디버그하면 optional toString 오류가 난다. 확인할 것
 		when(repository.findById(mockData.getId()))
 				.thenReturn(Optional.empty());
 		when(repository.save(any()))
