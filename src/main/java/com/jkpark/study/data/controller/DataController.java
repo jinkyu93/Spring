@@ -19,7 +19,7 @@ import java.util.Set;
 public class DataController {
 	private DataService service;
 
-	@GetMapping("/sample")
+	@GetMapping("/data/sample")
 	public ResponseEntity<DataDTO> getSample() {
 		DataDTO data = new DataDTO(new Date(), 10);
 
