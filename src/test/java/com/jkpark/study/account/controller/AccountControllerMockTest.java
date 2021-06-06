@@ -29,9 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // webmvctest 는 spring context 를 전체 다 조회하고 bean 을 만들어 주지 않는다
 // 때문에 Spring Security 의 Filter 가 등록될 때 있어야 할 bean 들이 만들어 지지 않는다.
 // 해당 부분을 Scan 할 필요가 있다.
-//@WebMvcTest(AccountController.class)
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
 @AutoConfigureRestDocs
 public class AccountControllerMockTest {
 
@@ -49,7 +48,7 @@ public class AccountControllerMockTest {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	private final String urlTemplate = AccountController.ACCOUNT_PATH;
+	private final String urlTemplate = AccountController.DEFAULT_PATH;
 
 	// nameof 키워드와 같은게 없다...
 	private final String testIdKey = "id";
@@ -59,7 +58,7 @@ public class AccountControllerMockTest {
 	private final String testPasswordValue = "pass";
 	private final Role testRoleValue = Role.ADMIN;
 
-	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Test
 	public void getUserFound() throws Exception {

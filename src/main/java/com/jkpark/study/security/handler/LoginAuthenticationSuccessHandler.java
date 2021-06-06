@@ -5,12 +5,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.security.dto.TokenDTO;
 import com.jkpark.study.security.context.UserContext;
 import com.jkpark.study.security.token.PostAuthorizationToken;
-import com.jkpark.study.security.util.JwtFactory;
+import com.jkpark.study.security.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletException;
@@ -22,8 +23,8 @@ import java.io.IOException;
 // 더 좋은 bean 을 만들기 위한 대체는 없나?
 @Component
 @AllArgsConstructor
-public class AuthenticationSuccessHandler implements org.springframework.security.web.authentication.AuthenticationSuccessHandler {
-	private JwtFactory factory;
+public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+	private JwtUtil jwtUtil;
 
 	private ObjectMapper objectMapper;
 
@@ -38,8 +39,8 @@ public class AuthenticationSuccessHandler implements org.springframework.securit
 		PostAuthorizationToken token = (PostAuthorizationToken) auth;
 		UserContext context = (UserContext) token.getPrincipal();
 
-		String accessToken = factory.generateAccessToken(context);
-		String refreshToken = factory.generateRefreshToken(context);
+		String accessToken = jwtUtil.generateAccessToken(context);
+		String refreshToken = jwtUtil.generateRefreshToken(context);
 
 		String userId = token.getAccountContext().getAccountDTO().getId();
 

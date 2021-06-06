@@ -4,6 +4,7 @@ import com.jkpark.study.security.service.UserDetailsService;
 import com.jkpark.study.security.token.PostAuthorizationToken;
 import com.jkpark.study.security.token.PreAuthorizationToken;
 import lombok.AllArgsConstructor;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
@@ -14,7 +15,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @AllArgsConstructor
-public class AuthenticationProvider implements org.springframework.security.authentication.AuthenticationProvider {
+public class LoginAuthenticationProvider implements AuthenticationProvider {
 
 	private UserDetailsService userDetailsService;
 

@@ -17,6 +17,8 @@ import java.util.Set;
 @RestController
 @AllArgsConstructor
 public class DataController {
+	public static final String DEFAULT_PATH = "/data";
+
 	private DataService service;
 
 	@GetMapping("/data/sample")

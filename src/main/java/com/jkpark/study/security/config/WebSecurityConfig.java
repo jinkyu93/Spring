@@ -1,9 +1,11 @@
 package com.jkpark.study.security.config;
 
-import com.jkpark.study.security.filter.AuthenticationFilter;
-import com.jkpark.study.security.handler.AuthenticationFailureHandler;
-import com.jkpark.study.security.handler.AuthenticationSuccessHandler;
-import com.jkpark.study.security.provider.AuthenticationProvider;
+import com.jkpark.study.security.filter.JwtFilter;
+import com.jkpark.study.security.filter.LoginAuthenticationFilter;
+import com.jkpark.study.security.handler.LoginAuthenticationFailureHandler;
+import com.jkpark.study.security.handler.LoginAuthenticationSuccessHandler;
+import com.jkpark.study.security.provider.JwtProvider;
+import com.jkpark.study.security.provider.LoginAuthenticationProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,12 +26,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final String loginUrl = "/account/login";
 	private final String refreshUrl = "/account/refresh";
 
-	private AuthenticationSuccessHandler loginAuthenticationSuccessHandler;
-	private AuthenticationFailureHandler loginAuthenticationFailureHandler;
-	private AuthenticationSuccessHandler refreshAuthenticationSuccessHandler;
-	private AuthenticationFailureHandler refreshAuthenticationFailureHandler;
+	private LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
+	private LoginAuthenticationFailureHandler loginAuthenticationFailureHandler;
+	// TODO : Refresh 전용 새로운 객체 만들 것
+	private LoginAuthenticationSuccessHandler refreshLoginAuthenticationSuccessHandler;
+	private LoginAuthenticationFailureHandler refreshLoginAuthenticationFailureHandler;
 
-	private AuthenticationProvider provider;
+	private LoginAuthenticationProvider loginAuthenticationProvider;
+	private JwtProvider jwtProvider;
+
 
 	// TODO : 원리 이해하고 더 좋은 방법 찾아보기
 	@Bean
@@ -37,30 +42,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	protected AuthenticationFilter getLoginFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+	// TODO : bean 으로 대체가 안되나?
+	// setAuthenticationManager 때문에 안되나?
+	protected LoginAuthenticationFilter getLoginFilter() throws Exception {
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
 
-	protected AuthenticationFilter getRefreshFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter(refreshUrl, refreshAuthenticationSuccessHandler, refreshAuthenticationFailureHandler);
+	protected LoginAuthenticationFilter getRefreshFilter() throws Exception {
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(refreshUrl, refreshLoginAuthenticationSuccessHandler, refreshLoginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
+
+	protected JwtFilter getJwtFilter() throws Exception {
+		JwtFilter filter = new JwtFilter(this.jwtProvider);
+		return filter;
+	}
+
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(this.provider);
+		auth.authenticationProvider(this.loginAuthenticationProvider);
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// TODO : 기능 확인 후 보안 적용할 것
+
+		/**
+		 * CookieCsrfTokenRepository.withHttpOnlyFalse())
+		 * X-XSRF-TOKEN
+		 * XSRF-TOKEN
+		 */
+		// cross-site request forgery
 		http.csrf()
 			.disable();
 
+		// X-Frame-Options 헤더 설정
 		http.headers()
 			.frameOptions()
 			.disable();
@@ -71,7 +93,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 			.antMatchers("/h2-console/**").permitAll() // /h2-console 용
 			.antMatchers("/**").authenticated();
 
-		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.addFilterBefore(this.getJwtFilter(), UsernamePasswordAuthenticationFilter.class)
+			.addFilterBefore(this.getLoginFilter(), JwtFilter.class);
+
 		// TODO : Refresh Filter 만들기
 		// 나중에 하자...
 		// refresh token 은 유효기간이 길기 때문에

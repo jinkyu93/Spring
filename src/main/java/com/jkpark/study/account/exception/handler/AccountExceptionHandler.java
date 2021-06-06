@@ -23,7 +23,7 @@ public class AccountExceptionHandler {
 				HttpStatus.NOT_FOUND.value(),
 				AccountNotFoundException.class.getSimpleName(),
 				badRequestException.getMessage(),
-				AccountController.ACCOUNT_PATH
+				AccountController.DEFAULT_PATH
 		);
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorDto);
 	}
@@ -35,7 +35,7 @@ public class AccountExceptionHandler {
 				HttpStatus.CONFLICT.value(),
 				AccountConflictException.class.getSimpleName(),
 				badRequestException.getMessage(),
-				AccountController.ACCOUNT_PATH
+				AccountController.DEFAULT_PATH
 		);
 		return ResponseEntity.status(HttpStatus.CONFLICT).body(errorDto);
 	}

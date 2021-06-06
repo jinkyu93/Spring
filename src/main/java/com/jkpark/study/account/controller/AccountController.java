@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class AccountController {
 	// TODO : const 하게 저장하고 있는게 아니라 동작하는 도중에 동적으로 값을 전달해 줄 수는 없을까?
 	// ex)HttpServletRequest
-	public static final String ACCOUNT_PATH = "/account";
+	public static final String DEFAULT_PATH = "/account";
 
 	private AccountService service;
 
