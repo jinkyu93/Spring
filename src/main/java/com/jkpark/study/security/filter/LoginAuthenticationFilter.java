@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -22,13 +23,13 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 	private LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
 	private LoginAuthenticationFailureHandler loginAuthenticationFailureHandler;
 
-	protected LoginAuthenticationFilter(String defaultFilterProcessesUrl) {
+	protected LoginAuthenticationFilter(AntPathRequestMatcher defaultFilterProcessesUrl) {
 		super(defaultFilterProcessesUrl);
 	}
 
 	// TODO : 더 가독성 좋은 줄바꿈에 대해서 고민해보기
 	public LoginAuthenticationFilter(
-			String defaultUrl,
+			AntPathRequestMatcher defaultUrl,
 			LoginAuthenticationSuccessHandler successHandler,
 			LoginAuthenticationFailureHandler failureHandler) {
 		super(defaultUrl);

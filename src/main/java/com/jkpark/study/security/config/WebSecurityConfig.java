@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 // WebSecurityConfigurerAdapter 를 상속받은 Class 에
@@ -45,14 +46,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// TODO : bean 으로 대체가 안되나?
 	// setAuthenticationManager 때문에 안되나?
 	protected LoginAuthenticationFilter getLoginFilter() throws Exception {
-		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(loginUrl,"POST");
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
 
 	protected LoginAuthenticationFilter getRefreshFilter() throws Exception {
-		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(refreshUrl, refreshLoginAuthenticationSuccessHandler, refreshLoginAuthenticationFailureHandler);
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(refreshUrl,"POST");
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, refreshLoginAuthenticationSuccessHandler, refreshLoginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
