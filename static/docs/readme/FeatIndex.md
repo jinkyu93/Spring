@@ -7,3 +7,4 @@
 3. [UnitTest](./feats/UnitTest.md)
 4. [RestDocs](./feats/RestDocs.md)
 5. [DbUnit](./feats/DbUnit.md)
+6. [Actuator](./feats/Actuator.md)

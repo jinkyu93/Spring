@@ -26,6 +26,9 @@ dependencies {
 	// for spring mvc
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
+	// for spring boot actuator
+	compile 'org.springframework.boot:spring-boot-starter-actuator'
+
 	// for json parser
 	// https://velog.io/@modsiw/Spring-JSON-Object-%EA%B4%80%EB%A0%A8
 	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'

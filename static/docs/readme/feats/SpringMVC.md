@@ -12,6 +12,8 @@
     * DB 와 매칭될 객체
 * Repository : DAO(Data Access Object)
     * DB 에 접근하는 객체
+    * DAO 에서는 DTO 를 모르는게 좋다
+        * DAO Module 을 분리할 경우, DTO 를 사용하는 모듈의 하위참조가 되기 때문에.
 * DTO : DTO(Data Transfer Object) or VO(Value Object)
     * 계층간 데이터 교환을 위한 객체
     * Setter / Getter 만을 가지는 순수한 모델

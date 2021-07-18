@@ -46,7 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	// TODO : bean 으로 대체가 안되나?
 	// setAuthenticationManager 때문에 안되나?
 	protected LoginAuthenticationFilter getLoginFilter() throws Exception {
-		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(loginUrl,"POST");
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(loginUrl, "POST");
 		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
@@ -54,7 +54,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	protected LoginAuthenticationFilter getRefreshFilter() throws Exception {
-		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(refreshUrl,"POST");
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(refreshUrl, "POST");
 		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, refreshLoginAuthenticationSuccessHandler, refreshLoginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
@@ -83,21 +83,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		 */
 		// cross-site request forgery
 		http.csrf()
-			.disable();
+				.disable();
 
 		// X-Frame-Options 헤더 설정
 		http.headers()
-			.frameOptions()
-			.disable();
+				.frameOptions()
+				.disable();
 
 		http.authorizeRequests()
-			.antMatchers("/account/**").permitAll() // 회원가입 등
-			.antMatchers("/docs/**").permitAll() // rest docs
-			.antMatchers("/h2-console/**").permitAll() // /h2-console 용
-			.antMatchers("/**").authenticated();
+				.antMatchers("/account/**").permitAll() // 회원가입 등
+				.antMatchers("/docs/**").permitAll() // rest docs
+				.antMatchers("/h2-console/**").permitAll() // h2-console 용
+				.antMatchers("/actuator/**").permitAll() // actuator 용 // TODO : admin 권한 유저 만 조회할 수 있도록 수정 필요
+				.antMatchers("/**").authenticated();
 
 		http.addFilterBefore(this.getJwtFilter(), UsernamePasswordAuthenticationFilter.class)
-			.addFilterBefore(this.getLoginFilter(), JwtFilter.class);
+				.addFilterBefore(this.getLoginFilter(), JwtFilter.class);
 
 		// TODO : Refresh Filter 만들기
 		// 나중에 하자...
