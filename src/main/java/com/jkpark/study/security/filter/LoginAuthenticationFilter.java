@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.security.handler.LoginAuthenticationFailureHandler;
 import com.jkpark.study.security.handler.LoginAuthenticationSuccessHandler;
-import com.jkpark.study.security.token.PreAuthorizationToken;
+import com.jkpark.study.security.token.PreAuthenticationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -42,7 +42,7 @@ public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingF
 			HttpServletRequest req,
 			HttpServletResponse res) throws AuthenticationException, IOException, ServletException {
 		AccountDTO dto = new ObjectMapper().readValue(req.getReader(), AccountDTO.class);
-		PreAuthorizationToken token = new PreAuthorizationToken(dto);
+		PreAuthenticationToken token = new PreAuthenticationToken(dto);
 
 		// PreAuthorizationToken 해당 객체에 맞는 Provider 를
 		// getAuthenticationManager 해당 메서드가 자동으로 찾아서 연결해 준다.

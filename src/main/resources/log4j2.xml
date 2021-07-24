@@ -17,6 +17,7 @@
         </Console>
         // %d : SimpleDateFormat
         // %i : integer value for numbering
+        // TODO : filePattern 으로 저장되는 gz 파일을 삭제할 수 있는 설정 찾기
         <RollingFile name="File_Appender" fileName="logs/${logFileName}.log" filePattern="logs/%d{yyyy-MM-dd}/${logFileName}_%d{yyyy-MM-dd}_%i.log.gz">
             <PatternLayout pattern="${layoutPattern}"/>
             <Policies>

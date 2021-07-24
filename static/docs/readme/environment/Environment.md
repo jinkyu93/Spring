@@ -1,4 +1,4 @@
-[Back](../../../README.md)
+[Back](../../../../README.md)
 
 # Develop Environment
 ## version
@@ -22,6 +22,7 @@ IDE : IntelliJ 2019
 
 # Shortcut
 * Create Unit Test : Ctrl + Shift + T
-* Move Line Up or Down : Shift + Alt + Up or Down
-* Move Cursor Before After : Alt + Ctl + left or right
-* Auto Line Alignment : Alt + Ctl + L
+* Move Line Up or Down : Alt + Shift + Up or Down
+* Move Cursor Before After : Ctl + Alt + left or right
+* Auto Line Alignment : Ctl + Alt + L
+* Comment Area (주석) : Ctl + Alt + / or Clt + /

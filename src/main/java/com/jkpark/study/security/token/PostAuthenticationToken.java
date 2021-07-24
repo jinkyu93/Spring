@@ -7,9 +7,9 @@ import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
 
-public class PostAuthorizationToken extends UsernamePasswordAuthenticationToken {
+public class PostAuthenticationToken extends UsernamePasswordAuthenticationToken {
 
-	private PostAuthorizationToken(
+	private PostAuthenticationToken(
 			Object principal,
 			Object credentials,
 			Collection<? extends GrantedAuthority> authorities
@@ -17,9 +17,9 @@ public class PostAuthorizationToken extends UsernamePasswordAuthenticationToken 
 		super(principal, credentials, authorities);
 	}
 
-	public static PostAuthorizationToken getTokenFormAccountContext(User context) {
+	public static PostAuthenticationToken getTokenFormAccountContext(User context) {
 
-		return new PostAuthorizationToken(
+		return new PostAuthenticationToken(
 				context,
 				context.getPassword(),
 				context.getAuthorities()

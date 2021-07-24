@@ -21,6 +21,8 @@ public class AccountController {
 
 	private AccountService service;
 
+	// 경로의 경우 full path 를 적어주는게 좋다고 생각한다.
+	// unique 함을 통한 검색의 용이성을 위해서
 	@GetMapping("/account")
 	public ResponseEntity<AccountDTO> getAccount(@RequestParam(value = "id", required = true) String id) {
 		AccountDTO selectedUser = service.findById(id);
