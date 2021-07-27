@@ -1,9 +1,11 @@
 package com.jkpark.study.security.config;
 
-import com.jkpark.study.security.filter.AuthenticationFilter;
-import com.jkpark.study.security.handler.AuthenticationFailureHandler;
-import com.jkpark.study.security.handler.AuthenticationSuccessHandler;
-import com.jkpark.study.security.provider.AuthenticationProvider;
+import com.jkpark.study.security.filter.JwtFilter;
+import com.jkpark.study.security.filter.LoginAuthenticationFilter;
+import com.jkpark.study.security.handler.LoginAuthenticationFailureHandler;
+import com.jkpark.study.security.handler.LoginAuthenticationSuccessHandler;
+import com.jkpark.study.security.provider.JwtProvider;
+import com.jkpark.study.security.provider.LoginAuthenticationProvider;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +15,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 // WebSecurityConfigurerAdapter 를 상속받은 Class 에
@@ -24,12 +27,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private final String loginUrl = "/account/login";
 	private final String refreshUrl = "/account/refresh";
 
-	private AuthenticationSuccessHandler loginAuthenticationSuccessHandler;
-	private AuthenticationFailureHandler loginAuthenticationFailureHandler;
-	private AuthenticationSuccessHandler refreshAuthenticationSuccessHandler;
-	private AuthenticationFailureHandler refreshAuthenticationFailureHandler;
+	private LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
+	private LoginAuthenticationFailureHandler loginAuthenticationFailureHandler;
+	// TODO : Refresh 전용 새로운 객체 만들 것
+	private LoginAuthenticationSuccessHandler refreshLoginAuthenticationSuccessHandler;
+	private LoginAuthenticationFailureHandler refreshLoginAuthenticationFailureHandler;
 
-	private AuthenticationProvider provider;
+	private LoginAuthenticationProvider loginAuthenticationProvider;
+	private JwtProvider jwtProvider;
+
 
 	// TODO : 원리 이해하고 더 좋은 방법 찾아보기
 	@Bean
@@ -37,35 +43,63 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	protected AuthenticationFilter getLoginFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter(loginUrl, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
+	// TODO : bean 으로 대체가 안되나?
+	// setAuthenticationManager 때문에 안되나?
+	protected LoginAuthenticationFilter getLoginFilter() throws Exception {
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(loginUrl, "POST");
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, loginAuthenticationSuccessHandler, loginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
 
-	protected AuthenticationFilter getRefreshFilter() throws Exception {
-		AuthenticationFilter filter = new AuthenticationFilter(refreshUrl, refreshAuthenticationSuccessHandler, refreshAuthenticationFailureHandler);
+	protected LoginAuthenticationFilter getRefreshFilter() throws Exception {
+		AntPathRequestMatcher antPathRequestMatcher = new AntPathRequestMatcher(refreshUrl, "POST");
+		LoginAuthenticationFilter filter = new LoginAuthenticationFilter(antPathRequestMatcher, refreshLoginAuthenticationSuccessHandler, refreshLoginAuthenticationFailureHandler);
 		filter.setAuthenticationManager(this.getAuthenticationManager());
 
 		return filter;
 	}
+
+	protected JwtFilter getJwtFilter() throws Exception {
+		JwtFilter filter = new JwtFilter(this.jwtProvider);
+		return filter;
+	}
+
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.authenticationProvider(this.provider);
+		auth.authenticationProvider(this.loginAuthenticationProvider);
 	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		// TODO : 기능 확인 후 보안 적용할 것
+
+		/**
+		 * CookieCsrfTokenRepository.withHttpOnlyFalse())
+		 * X-XSRF-TOKEN
+		 * XSRF-TOKEN
+		 */
+		// cross-site request forgery
 		http.csrf()
-			.disable();
+				.disable();
 
+		// X-Frame-Options 헤더 설정
 		http.headers()
-			.frameOptions()
-			.disable();
+				.frameOptions()
+				.disable();
 
-		http.addFilterBefore(getLoginFilter(), UsernamePasswordAuthenticationFilter.class);
+		http.authorizeRequests()
+				.antMatchers("/account/**").permitAll() // 회원가입 등
+				.antMatchers("/docs/**").permitAll() // rest docs
+				.antMatchers("/h2-console/**").permitAll() // h2-console 용
+				.antMatchers("/actuator/**").permitAll() // actuator 용 // TODO : admin 권한 유저 만 조회할 수 있도록 수정 필요
+				.antMatchers("/**").authenticated();
+
+		http.addFilterBefore(this.getJwtFilter(), UsernamePasswordAuthenticationFilter.class)
+				.addFilterBefore(this.getLoginFilter(), JwtFilter.class);
+
 		// TODO : Refresh Filter 만들기
 		// 나중에 하자...
 		// refresh token 은 유효기간이 길기 때문에

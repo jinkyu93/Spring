@@ -1,8 +1,7 @@
 package com.jkpark.study.security.util;
 
 import com.jkpark.study.security.context.UserContext;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -12,18 +11,18 @@ import java.util.Date;
 
 @Slf4j
 @Component
-public class JwtFactory {
+public class JwtUtil {
 	// TODO : config 로 빼기 (application.yml)
 	private static final long ExpiredTimeForAuthenticationToken = 14400000;
 	private static final long ExpiredTimeForRefreshToken = 864000000;
 	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
 	public String generateAccessToken(UserContext userContext) {
-		String jws = null;
+		String jwtStr = null;
 
 		// TODO : try resource 로 바꿔보기
 		try {
-			jws = Jwts.builder()
+			jwtStr = Jwts.builder()
 					.setIssuer("jkpark")
 					.setHeaderParam("typ", "JWT")
 					.setId(userContext.getAccountDTO().getId())
@@ -34,7 +33,7 @@ public class JwtFactory {
 		} catch(Exception e) {
 			log.error(e.getMessage());
 		} finally {
-			return jws;
+			return jwtStr;
 		}
 	}
 
@@ -60,5 +59,17 @@ public class JwtFactory {
 			return jws;
 		}
 		 */
+	}
+
+	public String getUserId(String token) {
+		return this.getClaims(token).getId();
+	}
+
+	public boolean isTokenValid(String token) {
+		return this.getClaims(token).getExpiration().after(new Date());
+	}
+
+	private Claims getClaims(String token) {
+		return Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
 	}
 }

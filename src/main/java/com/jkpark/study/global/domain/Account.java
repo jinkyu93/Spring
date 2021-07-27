@@ -18,8 +18,6 @@ public class Account {
 	@Id
 	// public key 생성 전략 설정
 	@GeneratedValue(generator = "uuid2")
-	@GenericGenerator(name = "uuid2", strategy = "uuid2")
-	// dbms 종류마다 달라질 수 있음으로 길이 fix
 	@Column(name = "uuid", columnDefinition = "BINARY(16)")
 	private UUID uuid;
 
@@ -34,10 +32,11 @@ public class Account {
 	@Enumerated(value = EnumType.STRING)
 	private Role role;
 
-	// @Builder 를 사용해서 얻는 장점은?
+	// TODO : @Builder 를 사용해서 얻는 장점은?
 	// 밖에서 new 로 생성하는 것과의 차이 찾아보기
 	public Account(String id, String pw, Role role) {
-		this.uuid = UUID.randomUUID();
+		//GeneratedValue 가 있기 때문에 직접 생성해주면 안된다.
+		//this.uuid = UUID.randomUUID();
 		this.id = id;
 		this.pw = pw;
 		this.role = role;

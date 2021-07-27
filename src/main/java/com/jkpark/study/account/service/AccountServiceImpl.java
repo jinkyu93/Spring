@@ -1,5 +1,7 @@
 package com.jkpark.study.account.service;
 
+import com.jkpark.study.account.exception.AccountConflictException;
+import com.jkpark.study.account.exception.AccountNotFoundException;
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
@@ -20,38 +22,41 @@ public class AccountServiceImpl implements AccountService {
 
 	@Override
 	public AccountDTO insert(AccountDTO account) {
-		// need to encrypt the password
-		Account selectedAccount = dao.findById(account.getId()).orElse(null);
+		checkAccountIsExist(account);
+		encodePassword(account);
+		Account createdAccount = dao.save(account.toEntity());
 
-		// 이런 null 체크 로직을 줄일 수 있는 방법이 없을까
-		if(selectedAccount != null) {
-			return new AccountDTO("", "", Role.USER);
-		}
+		return accountToAccountDTO(createdAccount);
+	}
 
+	private void encodePassword(AccountDTO account) {
 		// encoding 을 insert 시에만 하면 되는가?
 		String rawPw = account.getPw();
 		String encodedPw = passwordEncoder.encode(rawPw);
 		account.setPw(encodedPw);
+	}
 
-		Account createdAccount = dao.save(account.toEntity());
+	private void checkAccountIsExist(AccountDTO account) {
+		Account selectedAccount = dao.findById(account.getId()).orElse(null);
 
-		return userToUserDTO(createdAccount);
+		// 이런 null 체크 로직을 줄일 수 있는 방법이 없을까
+		if(selectedAccount != null) {
+			throw new AccountConflictException();
+		}
 	}
 
 	@Override
 	public AccountDTO findById(String id) {
 		Optional<Account> optionalAccount = dao.findById(id);
-		Account selectedAccount = optionalAccount.orElse(new Account("", "", Role.USER));
-		return userToUserDTO(selectedAccount);
+		Account selectedAccount = optionalAccount.orElseThrow(AccountNotFoundException::new);
+		return accountToAccountDTO(selectedAccount);
 	}
 
-	private AccountDTO userToUserDTO(Account selectedAccount) {
-		String id = Optional.of(selectedAccount.getId()).orElse("");
-		String pw = Optional.of(selectedAccount.getPw()).orElse("");
-		Role role = Optional.of(selectedAccount.getRole()).orElse(Role.USER);
+	private AccountDTO accountToAccountDTO(Account selectedAccount) {
+		String id = selectedAccount.getId();
+		String pw = selectedAccount.getPw();
+		Role role = selectedAccount.getRole();
 
-		AccountDTO dto = new AccountDTO(id, pw, role);
-
-		return dto;
+		return new AccountDTO(id, pw, role);
 	}
 }

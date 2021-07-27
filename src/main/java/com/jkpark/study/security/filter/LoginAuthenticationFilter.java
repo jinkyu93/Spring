@@ -2,13 +2,14 @@ package com.jkpark.study.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.global.dto.AccountDTO;
-import com.jkpark.study.security.handler.AuthenticationFailureHandler;
-import com.jkpark.study.security.handler.AuthenticationSuccessHandler;
+import com.jkpark.study.security.handler.LoginAuthenticationFailureHandler;
+import com.jkpark.study.security.handler.LoginAuthenticationSuccessHandler;
 import com.jkpark.study.security.token.PreAuthorizationToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,23 +18,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
-public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter {
+public class LoginAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
 
-	private AuthenticationSuccessHandler authenticationSuccessHandler;
-	private AuthenticationFailureHandler authenticationFailureHandler;
+	private LoginAuthenticationSuccessHandler loginAuthenticationSuccessHandler;
+	private LoginAuthenticationFailureHandler loginAuthenticationFailureHandler;
 
-	protected AuthenticationFilter(String defaultFilterProcessesUrl) {
+	protected LoginAuthenticationFilter(AntPathRequestMatcher defaultFilterProcessesUrl) {
 		super(defaultFilterProcessesUrl);
 	}
 
 	// TODO : 더 가독성 좋은 줄바꿈에 대해서 고민해보기
-	public AuthenticationFilter(
-			String defaultUrl,
-			AuthenticationSuccessHandler successHandler,
-			AuthenticationFailureHandler failureHandler) {
+	public LoginAuthenticationFilter(
+			AntPathRequestMatcher defaultUrl,
+			LoginAuthenticationSuccessHandler successHandler,
+			LoginAuthenticationFailureHandler failureHandler) {
 		super(defaultUrl);
-		this.authenticationSuccessHandler = successHandler;
-		this.authenticationFailureHandler = failureHandler;
+		this.loginAuthenticationSuccessHandler = successHandler;
+		this.loginAuthenticationFailureHandler = failureHandler;
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 			HttpServletResponse res,
 			FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
-		this.authenticationSuccessHandler.onAuthenticationSuccess(req, res, authResult);
+		this.loginAuthenticationSuccessHandler.onAuthenticationSuccess(req, res, authResult);
 	}
 
 	@Override
@@ -62,6 +63,6 @@ public class AuthenticationFilter extends AbstractAuthenticationProcessingFilter
 			HttpServletRequest req,
 			HttpServletResponse res,
 			AuthenticationException failed) throws IOException, ServletException {
-		this.authenticationFailureHandler.onAuthenticationFailure(req, res, failed);
+		this.loginAuthenticationFailureHandler.onAuthenticationFailure(req, res, failed);
 	}
 }

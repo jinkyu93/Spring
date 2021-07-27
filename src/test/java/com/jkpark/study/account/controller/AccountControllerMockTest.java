@@ -1,11 +1,14 @@
 package com.jkpark.study.account.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jkpark.study.account.exception.AccountConflictException;
+import com.jkpark.study.account.exception.AccountNotFoundException;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -25,9 +29,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // webmvctest 는 spring context 를 전체 다 조회하고 bean 을 만들어 주지 않는다
 // 때문에 Spring Security 의 Filter 가 등록될 때 있어야 할 bean 들이 만들어 지지 않는다.
 // 해당 부분을 Scan 할 필요가 있다.
-//@WebMvcTest(AccountController.class)
 @SpringBootTest
-@AutoConfigureMockMvc(addFilters = false)
+@AutoConfigureMockMvc
+@AutoConfigureRestDocs
 public class AccountControllerMockTest {
 
 	@Autowired
@@ -44,7 +48,7 @@ public class AccountControllerMockTest {
 
 	private ObjectMapper mapper = new ObjectMapper();
 
-	private final String urlTemplate = "/account";
+	private final String urlTemplate = AccountController.DEFAULT_PATH;
 
 	// nameof 키워드와 같은게 없다...
 	private final String testIdKey = "id";
@@ -54,7 +58,7 @@ public class AccountControllerMockTest {
 	private final String testPasswordValue = "pass";
 	private final Role testRoleValue = Role.ADMIN;
 
-	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();;
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 	@Test
 	public void getUserFound() throws Exception {
@@ -66,26 +70,28 @@ public class AccountControllerMockTest {
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 
-		// jsonPath 에 하드코딩된 key 를 동적으로 바꿀 수 있는 방법 고민 필요
-		// 안그러면 client 에 보내는 response dto 의 모습이 변할 때 마다 test 도 변경해야한다.
-		// 점심 나가서 먹을 거 같아~~~
+		// TODO : 더 좋은방법 찾기
+		// 상수를 사용하는게 아니라
+		// model 의 변경에 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isFound())
+				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
-				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()));
+				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()))
+				.andDo(document("account/get/success"));
 	}
 
 	@Test
 	public void getUserNotFound() throws Exception {
 		when(service.findById(testIdValue))
-				.thenReturn(null);
+				.thenThrow(new AccountNotFoundException());
 
 		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isNotFound());
+				.andExpect(status().isNotFound())
+				.andDo(document("account/get/failure"));
 	}
 
 	@Test
@@ -103,7 +109,8 @@ public class AccountControllerMockTest {
 								.content(content);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isCreated());
+				.andExpect(status().isOk())
+				.andDo(document("account/post/success"));
 	}
 
 	@Test
@@ -111,7 +118,7 @@ public class AccountControllerMockTest {
 		AccountDTO mockData = makeTestUserDTO();
 
 		when(service.insert(any(AccountDTO.class)))
-				.thenReturn(null);
+				.thenThrow(new AccountConflictException());
 
 		String content = mapper.writeValueAsString(mockData);
 
@@ -120,7 +127,8 @@ public class AccountControllerMockTest {
 				.content(content);
 		mockMvc.perform(builder)
 				.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isConflict());
+				.andExpect(status().isConflict())
+				.andDo(document("account/post/failure"));
 	}
 
 	private AccountDTO makeTestUserDTO() {
