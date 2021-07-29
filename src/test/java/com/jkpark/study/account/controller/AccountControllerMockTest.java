@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -62,19 +63,20 @@ public class AccountControllerMockTest {
 
 	@Test
 	public void getUserFound() throws Exception {
-		AccountDTO mockData = makeTestUserDTO();
-
-		// mock service 에서 반환할 mock data 설정
+		// given
+		var mockData = makeTestUserDTO();
+		var builder = get(urlTemplate).param(testIdKey, testIdValue);
 		when(service.findById(testIdValue))
 				.thenReturn(mockData);
 
-		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
+		// when
+		var resultActions = mockMvc.perform(builder);
 
+		// then
 		// TODO : 더 좋은방법 찾기
-		// 상수를 사용하는게 아니라
-		// model 의 변경에 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
-		mockMvc.perform(builder)
-				.andDo(MockMvcResultHandlers.print())
+		// jsonPath 의 key 로 상수를 사용하는게 아니라
+		// model 의 변경에 따라 테스트코드도 동적으로 변경될 수 있도록 수정할 수 없을까?
+		resultActions.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
@@ -84,49 +86,55 @@ public class AccountControllerMockTest {
 
 	@Test
 	public void getUserNotFound() throws Exception {
+		// given
+		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
 		when(service.findById(testIdValue))
 				.thenThrow(new AccountNotFoundException());
 
-		RequestBuilder builder = get(urlTemplate).param(testIdKey, testIdValue);
-		mockMvc.perform(builder)
-				.andDo(MockMvcResultHandlers.print())
+		// when
+		var resultActions = mockMvc.perform(builder);
+
+		// then
+		resultActions.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isNotFound())
 				.andDo(document("account/get/failure"));
 	}
 
 	@Test
 	public void postUserCreated() throws Exception {
-		AccountDTO mockData = makeTestUserDTO();
-
-		// mockData 의 eq 를 하면 왜 null 을 return 할까?
+		// given
+		var mockData = makeTestUserDTO();
+		var content = mapper.writeValueAsString(mockData);
+		var builder = post(urlTemplate)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content);
 		when(service.insert(any(AccountDTO.class)))
 				.thenReturn(mockData);
+		// when
+		var resultActions = mockMvc.perform(builder);
 
-		String content = mapper.writeValueAsString(mockData);
-
-		RequestBuilder builder = post(urlTemplate)
-								.contentType(MediaType.APPLICATION_JSON)
-								.content(content);
-		mockMvc.perform(builder)
-				.andDo(MockMvcResultHandlers.print())
+		// then
+		resultActions.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isOk())
 				.andDo(document("account/post/success"));
 	}
 
 	@Test
 	public void postUserConflict() throws Exception {
-		AccountDTO mockData = makeTestUserDTO();
-
+		// given
+		var mockData = makeTestUserDTO();
+		var content = mapper.writeValueAsString(mockData);
+		var builder = post(urlTemplate)
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(content);
 		when(service.insert(any(AccountDTO.class)))
 				.thenThrow(new AccountConflictException());
 
-		String content = mapper.writeValueAsString(mockData);
+		// when
+		var resultActions = mockMvc.perform(builder);
 
-		RequestBuilder builder = post(urlTemplate)
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(content);
-		mockMvc.perform(builder)
-				.andDo(MockMvcResultHandlers.print())
+		// then
+		resultActions.andDo(MockMvcResultHandlers.print())
 				.andExpect(status().isConflict())
 				.andDo(document("account/post/failure"));
 	}

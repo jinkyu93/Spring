@@ -23,19 +23,17 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 @Import(DbUnitConfig.class)
 @DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
-@DatabaseSetup(value = { // 각 test 실행 전
+@DatabaseSetup(value = {
 		"/dbunit/account.xml"
 }, type = DatabaseOperation.CLEAN_INSERT)
-@DatabaseTearDown(value = { // 각 test 실행 후
+@DatabaseTearDown(value = {
 		"/dbunit/account.xml"
 }, type = DatabaseOperation.DELETE_ALL)
 @TestExecutionListeners(
 		value = {
-			DbUnitTestExecutionListener.class,
-			DependencyInjectionTestExecutionListener.class // bean 을 di 받기 위해서 필요
+				DbUnitTestExecutionListener.class,
+				DependencyInjectionTestExecutionListener.class
 		},
-		// default 값인 replace 의 경우 spring-boot-test 에서 기본적으로 loading 해주는 TestExecutionListeners 들이 무시된다.
-		// ex) @MockBean
 		mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
 )
 @SpringBootTest
@@ -54,26 +52,35 @@ public class AccountRepositoryTest {
 
 	@Test
 	public void findByIdSuccess() {
-		Account testData = makeTestAccount();
-		Account result = dao.findById(testIdValue).get();
+		// given
+		var testData = makeTestAccount();
 
+		// when
+		var result = dao.findById(testIdValue).get();
+
+		// then
 		assertEquals(result.getId(), testData.getId());
 		assertEquals(result.getPw(), testData.getPw());
 	}
 
 	@Test
 	public void findByIdNothing() {
-		Account result = dao.findById(testNewIdValue).orElse(null);
+		// given + when
+		var result = dao.findById(testNewIdValue).orElse(null);
 
+		// then
 		assertNull(result);
 	}
 
 	@Test
 	public void saveSuccess() {
-		Account testData = makeTestNewAccount();
+		// given
+		var testData = makeTestNewAccount();
 
-		Account result = dao.save(testData);
+		// when
+		var result = dao.save(testData);
 
+		// then
 		assertEquals(result.getUuid(), testData.getUuid());
 		assertEquals(result.getId(), testData.getId());
 		assertEquals(result.getPw(), testData.getPw());
@@ -81,10 +88,13 @@ public class AccountRepositoryTest {
 
 	@Test
 	public void saveConflict() {
-		Account testData = makeTestAccount();
+		// given
+		var testData = makeTestAccount();
 
-		Account selectedAccount = dao.findById(testData.getId()).orElse(null);
+		// when
+		var selectedAccount = dao.findById(testData.getId()).orElse(null);
 
+		// then
 		assertNotNull(selectedAccount);
 	}
 
