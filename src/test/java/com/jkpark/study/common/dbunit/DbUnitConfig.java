@@ -13,7 +13,7 @@ public class DbUnitConfig {
 
 	@Bean
 	public DatabaseConfigBean dbUnitDatabaseConfig() {
-		DatabaseConfigBean config = new DatabaseConfigBean();
+		var config = new DatabaseConfigBean();
 		//config.setAllowEmptyFields(true);
 		config.setDatatypeFactory(new H2DataTypeFactory());
 		return config;
@@ -21,7 +21,7 @@ public class DbUnitConfig {
 
 	@Bean
 	public DatabaseDataSourceConnectionFactoryBean dbUnitDatabaseConnection(DataSource dataSource) {
-		DatabaseDataSourceConnectionFactoryBean dbUnitDatabaseConnection = new DatabaseDataSourceConnectionFactoryBean();
+		var dbUnitDatabaseConnection = new DatabaseDataSourceConnectionFactoryBean();
 		dbUnitDatabaseConnection.setDataSource(dataSource);
 		dbUnitDatabaseConnection.setDatabaseConfig(dbUnitDatabaseConfig());
 		return dbUnitDatabaseConnection;

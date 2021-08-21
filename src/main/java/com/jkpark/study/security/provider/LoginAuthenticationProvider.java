@@ -1,8 +1,8 @@
 package com.jkpark.study.security.provider;
 
 import com.jkpark.study.security.service.UserDetailsService;
-import com.jkpark.study.security.token.PostAuthorizationToken;
-import com.jkpark.study.security.token.PreAuthorizationToken;
+import com.jkpark.study.security.token.PostAuthenticationToken;
+import com.jkpark.study.security.token.PreAuthenticationToken;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
@@ -23,7 +23,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-		PreAuthorizationToken token = (PreAuthorizationToken)authentication;
+		PreAuthenticationToken token = (PreAuthenticationToken)authentication;
 
 		String username = token.getUsername();
 		String password = token.getUserPassword();
@@ -31,7 +31,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
 		User user = (User) userDetailsService.loadUserByUsername(username);
 
 		if(isCorrectPassword(password, user)) {
-			return PostAuthorizationToken.getTokenFormAccountContext(user);
+			return PostAuthenticationToken.getTokenFormAccountContext(user);
 		}
 
 		// 이곳까지 통과하지 못하면 잘못된 요청으로 접근하지 못한것 그러므로 throw 해줘야 한다.
@@ -40,7 +40,7 @@ public class LoginAuthenticationProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return PreAuthorizationToken.class.isAssignableFrom(authentication);
+		return PreAuthenticationToken.class.isAssignableFrom(authentication);
 	}
 
 	private boolean isCorrectPassword(String password, User user) {

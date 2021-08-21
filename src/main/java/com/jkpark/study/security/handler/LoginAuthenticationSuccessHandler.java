@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.security.dto.TokenDTO;
 import com.jkpark.study.security.context.UserContext;
-import com.jkpark.study.security.token.PostAuthorizationToken;
+import com.jkpark.study.security.token.PostAuthenticationToken;
 import com.jkpark.study.security.util.JwtUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 	) throws IOException, ServletException {
 		// Token 값을 정형화된 DTO를 만들어서 res 으로 내려주는 역활을 수행한다.
 		// 인증결과 객체 auth 를 PostAuthorizationToken객체 변수에 담아줍니다.
-		PostAuthorizationToken token = (PostAuthorizationToken) auth;
+		PostAuthenticationToken token = (PostAuthenticationToken) auth;
 		UserContext context = (UserContext) token.getPrincipal();
 
 		String accessToken = jwtUtil.generateAccessToken(context);
