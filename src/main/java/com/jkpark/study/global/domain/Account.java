@@ -3,7 +3,7 @@ package com.jkpark.study.global.domain;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.UUID;
 
 // JPA 에서 사용하기 위해서 반드시 기본 생성자가 필요한데,

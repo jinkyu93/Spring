@@ -1,11 +1,5 @@
 package com.jkpark.study.account.repository;
 
-import com.github.springtestdbunit.DbUnitTestExecutionListener;
-import com.github.springtestdbunit.annotation.DatabaseOperation;
-import com.github.springtestdbunit.annotation.DatabaseSetup;
-import com.github.springtestdbunit.annotation.DatabaseTearDown;
-import com.github.springtestdbunit.annotation.DbUnitConfiguration;
-import com.jkpark.study.common.dbunit.DbUnitConfig;
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.repository.AccountRepository;
@@ -13,29 +7,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Transactional
-@Import(DbUnitConfig.class)
-@DbUnitConfiguration(databaseConnection = "dbUnitDatabaseConnection")
-@DatabaseSetup(value = {
-		"/dbunit/account.xml"
-}, type = DatabaseOperation.CLEAN_INSERT)
-@DatabaseTearDown(value = {
-		"/dbunit/account.xml"
-}, type = DatabaseOperation.DELETE_ALL)
-@TestExecutionListeners(
-		value = {
-				DbUnitTestExecutionListener.class,
-				DependencyInjectionTestExecutionListener.class
-		},
-		mergeMode = TestExecutionListeners.MergeMode.MERGE_WITH_DEFAULTS
-)
 @SpringBootTest
 public class AccountRepositoryTest {
 	@Autowired

@@ -1,11 +1,13 @@
 package com.jkpark.study.security.handler;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jkpark.study.security.dto.TokenDTO;
 import com.jkpark.study.security.context.UserContext;
 import com.jkpark.study.security.token.PostAuthenticationToken;
 import com.jkpark.study.security.util.JwtUtil;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,9 +16,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Slf4j
@@ -51,7 +50,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 		return new TokenDTO(accessToken, refreshToken, userId);
 	}
 
-	private void processResponse(HttpServletResponse res, TokenDTO dto) throws JsonProcessingException, IOException {
+	private void processResponse(HttpServletResponse res, TokenDTO dto) throws IOException {
 		res.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		res.setStatus(HttpStatus.OK.value());
 		res.getWriter().write(objectMapper.writeValueAsString(dto));

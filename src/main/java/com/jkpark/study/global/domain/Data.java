@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -24,7 +24,7 @@ public class Data {
 	@Column(name = "CREATED_TIME", nullable = false)
 	private Date created_time;
 
-	@Column(name = "VALUE", nullable = false)
+	@Column(name = "VAL", nullable = false)
 	private int val;
 
 	public Data(int val) {

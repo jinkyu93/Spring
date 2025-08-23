@@ -1,8 +1,8 @@
 package com.jkpark.study.security.util;
 
 import com.jkpark.study.security.context.UserContext;
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -14,62 +14,50 @@ import java.util.Date;
 public class JwtUtil {
 	// TODO : config 로 빼기 (application.yml)
 	private static final long ExpiredTimeForAuthenticationToken = 14400000;
-	private static final long ExpiredTimeForRefreshToken = 864000000;
-	private SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+	private final SecretKey key = Jwts.SIG.HS256.key().build();
 
 	public String generateAccessToken(UserContext userContext) {
-		String jwtStr = null;
-
-		// TODO : try resource 로 바꿔보기
 		try {
-			jwtStr = Jwts.builder()
-					.setIssuer("jkpark")
-					.setHeaderParam("typ", "JWT")
-					.setId(userContext.getAccountDTO().getId())
+			Date now = new Date();
+			return Jwts.builder()
+					.issuer("jkpark")
+					.header().add("typ", "JWT").and()
+					.subject(userContext.getAccountDTO().getId())
 					.claim("role", userContext.getAccountDTO().getRole())
-					.setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTimeForAuthenticationToken))
-					.signWith(key).compact();
-		} catch(Exception e) {
-			log.error(e.getMessage());
-		} finally {
-			return jwtStr;
+					.issuedAt(now)
+					.expiration(new Date(now.getTime() + ExpiredTimeForAuthenticationToken))
+					.signWith(key)
+					.compact();
+		} catch (Exception e) {
+			log.error("Failed to generate access token", e);
+			return null;
 		}
 	}
 
 	public String generateRefreshToken(UserContext userContext) {
+		// Refresh token implementation is out of scope for this fix.
 		return "";
-
-		/*
-		String jws = null;
-
-		// TODO : try resource 로 바꿔보기
-		try {
-			jws = Jwts.builder()
-					.setIssuer("jkpark")
-					.setHeaderParam("typ", "JWT")
-					.setId(userContext.getAccountDTO().getId())
-					.claim("role", userContext.getAccountDTO().getRole())
-					.setIssuedAt(new Date())
-					.setExpiration(new Date(System.currentTimeMillis() + ExpiredTimeForRefreshToken))
-					.signWith(key).compact();
-		} catch(Exception e) {
-			log.error(e.getMessage());
-		} finally {
-			return jws;
-		}
-		 */
 	}
 
 	public String getUserId(String token) {
-		return this.getClaims(token).getId();
+		return this.getClaims(token).getSubject();
 	}
 
 	public boolean isTokenValid(String token) {
-		return this.getClaims(token).getExpiration().after(new Date());
+		try {
+			Date expiration = getClaims(token).getExpiration();
+			return expiration.after(new Date());
+		} catch (Exception e) {
+			log.warn("Invalid JWT token received: {}", e.getMessage());
+			return false;
+		}
 	}
 
 	private Claims getClaims(String token) {
-		return Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
+		return Jwts.parser()
+				.verifyWith(this.key)
+				.build()
+				.parseSignedClaims(token)
+				.getPayload();
 	}
 }

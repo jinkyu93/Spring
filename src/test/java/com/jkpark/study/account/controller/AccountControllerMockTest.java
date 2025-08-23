@@ -8,7 +8,6 @@ import com.jkpark.study.global.dto.AccountDTO;
 import com.jkpark.study.global.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -16,12 +15,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -32,7 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 // 해당 부분을 Scan 할 필요가 있다.
 @SpringBootTest
 @AutoConfigureMockMvc
-@AutoConfigureRestDocs
 public class AccountControllerMockTest {
 
 	@Autowired
@@ -80,8 +76,7 @@ public class AccountControllerMockTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.id").value(mockData.getId()))
 				.andExpect(jsonPath("$.pw").value(mockData.getPw()))
-				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()))
-				.andDo(document("account/get/success"));
+				.andExpect(jsonPath("$.role").value(mockData.getRole().toString()));
 	}
 
 	@Test
@@ -96,8 +91,7 @@ public class AccountControllerMockTest {
 
 		// then
 		resultActions.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isNotFound())
-				.andDo(document("account/get/failure"));
+				.andExpect(status().isNotFound());
 	}
 
 	@Test
@@ -115,8 +109,7 @@ public class AccountControllerMockTest {
 
 		// then
 		resultActions.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isOk())
-				.andDo(document("account/post/success"));
+				.andExpect(status().isOk());
 	}
 
 	@Test
@@ -135,8 +128,7 @@ public class AccountControllerMockTest {
 
 		// then
 		resultActions.andDo(MockMvcResultHandlers.print())
-				.andExpect(status().isConflict())
-				.andDo(document("account/post/failure"));
+				.andExpect(status().isConflict());
 	}
 
 	private AccountDTO makeTestUserDTO() {

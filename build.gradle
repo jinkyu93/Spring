@@ -1,25 +1,26 @@
 plugins {
-	id 'org.springframework.boot' version '2.4.0'
-	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'org.springframework.boot' version '3.5.5'
+    id 'io.spring.dependency-management' version '1.1.7'
 	id 'java'
-	// 버전의 호환성 문제가 있다.
-	// 다른 버전을 사용하면 window encoding 문제가 발생한다.
-	// 더 높은 버전을 사용해도 문제가 발생한다....
-	id "org.asciidoctor.convert" version "1.5.3"
 }
 
 group = 'com.jkpark'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
-repositories {
-	mavenCentral()
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	all {
-		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -27,76 +28,37 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
 	// for spring boot actuator
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
-
-	// for json parser
-	// https://velog.io/@modsiw/Spring-JSON-Object-%EA%B4%80%EB%A0%A8
-	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.11.1'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
 	// for lombok annotations
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
-	testCompileOnly 'org.projectlombok:lombok'
-	testAnnotationProcessor 'org.projectlombok:lombok'
+	//testCompileOnly 'org.projectlombok:lombok'
+	//testAnnotationProcessor 'org.projectlombok:lombok'
 
 	// for unit test
-	testImplementation ('org.springframework.boot:spring-boot-starter-test'){
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-	testImplementation 'org.dbunit:dbunit:2.6.0'
-	testImplementation 'com.github.springtestdbunit:spring-test-dbunit:1.3.0' // 더 이상 버전업이 없다...
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.security:spring-security-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-	// for rest docs
-	asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc' // mock 용
-	//testImplementation 'org.springframework.restdocs:spring-restdocs-webtestclient' // webtestclient 용
+    // for swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.10'
 
-	// for logging
-	implementation 'org.apache.logging.log4j:log4j-web:2.12.1'
-	implementation 'org.springframework.boot:spring-boot-starter-log4j2'
-
-	// for h2 database
+	// for jdbc
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	runtime 'com.h2database:h2'
+
+    // for local database
+    runtimeOnly 'com.h2database:h2'
 
 	// for spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
 	// for jwt
-	// TODO : 얘는 spring boot 에서 버전 자동으로 안되나
-	//implementation 'com.auth0:java-jwt:3.3.0'
-	compile 'io.jsonwebtoken:jjwt-api:0.11.2'
-	runtime 'io.jsonwebtoken:jjwt-impl:0.11.2',
-			// Uncomment the next line if you want to use RSASSA-PSS (PS256, PS384, PS512) algorithms:
-			//'org.bouncycastle:bcprov-jdk15on:1.60',
-			'io.jsonwebtoken:jjwt-jackson:0.11.2' // or 'io.jsonwebtoken:jjwt-gson:0.11.2' for gson
-}
-
-ext {
-	snippetsDir = file('build/generated-snippets')
-}
-
-task copyDocument(type: Copy) {
-	dependsOn asciidoctor
-	from file("${asciidoctor.outputDir}/html5")
-	into file("static/docs/api")
-}
-
-build {
-	dependsOn copyDocument
-}
-
-bootJar {
-	dependsOn copyDocument
-}
-
-asciidoctor {
-	inputs.dir snippetsDir
-	dependsOn test
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.5'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.5' // or 'io.jsonwebtoken:jjwt-gson:0.12.5' for gson
 }
 
 test {
-	outputs.dir snippetsDir
 	useJUnitPlatform()
 }
