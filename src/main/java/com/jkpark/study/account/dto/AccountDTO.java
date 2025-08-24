@@ -1,7 +1,7 @@
-package com.jkpark.study.global.dto;
+package com.jkpark.study.account.dto;
 
-import com.jkpark.study.global.domain.Account;
-import com.jkpark.study.global.domain.Role;
+import com.jkpark.study.account.dao.Account;
+import com.jkpark.study.account.enums.Role;
 import lombok.*;
 
 // 근데 이거 Setter 가 필요해?

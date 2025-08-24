@@ -1,6 +1,6 @@
-package com.jkpark.study.global.repository;
+package com.jkpark.study.account.repository;
 
-import com.jkpark.study.global.domain.Account;
+import com.jkpark.study.account.dao.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

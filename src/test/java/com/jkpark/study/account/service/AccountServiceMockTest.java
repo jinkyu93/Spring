@@ -2,17 +2,15 @@ package com.jkpark.study.account.service;
 
 import com.jkpark.study.account.exception.AccountConflictException;
 import com.jkpark.study.account.exception.AccountNotFoundException;
-import com.jkpark.study.global.domain.Account;
-import com.jkpark.study.global.domain.Role;
-import com.jkpark.study.global.dto.AccountDTO;
-import com.jkpark.study.global.repository.AccountRepository;
-import com.jkpark.study.global.service.AccountService;
+import com.jkpark.study.account.dao.Account;
+import com.jkpark.study.account.enums.Role;
+import com.jkpark.study.account.dto.AccountDTO;
+import com.jkpark.study.account.repository.AccountRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 
@@ -21,14 +19,14 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-public class AccountServiceImplMockTest {
+public class AccountServiceMockTest {
 	@Autowired
 	private AccountService service;
 
-	@MockBean
+	@MockitoBean
 	AccountRepository repository;
 
-	@MockBean
+	@MockitoBean
 	BCryptPasswordEncoder passwordEncoder;
 
 	private final String testIdValue = "admin";

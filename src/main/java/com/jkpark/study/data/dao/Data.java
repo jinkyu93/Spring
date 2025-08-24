@@ -1,14 +1,12 @@
-package com.jkpark.study.global.domain;
+package com.jkpark.study.data.dao;
 
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
 import java.util.Date;
-import java.util.UUID;
 
 @Getter
 @ToString

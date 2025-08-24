@@ -1,7 +1,7 @@
 package com.jkpark.study.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jkpark.study.global.dto.AccountDTO;
+import com.jkpark.study.account.dto.AccountDTO;
 import com.jkpark.study.security.handler.LoginAuthenticationFailureHandler;
 import com.jkpark.study.security.handler.LoginAuthenticationSuccessHandler;
 import com.jkpark.study.security.token.PreAuthenticationToken;

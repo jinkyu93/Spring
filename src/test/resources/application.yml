@@ -10,8 +10,3 @@ spring:
     console:
       enabled: true
 
-server:
-  port: 8882
-
-logging:
-  config: classpath:log4j2.xml

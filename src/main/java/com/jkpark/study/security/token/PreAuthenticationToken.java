@@ -1,6 +1,6 @@
 package com.jkpark.study.security.token;
 
-import com.jkpark.study.global.dto.AccountDTO;
+import com.jkpark.study.account.dto.AccountDTO;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 public class PreAuthenticationToken extends UsernamePasswordAuthenticationToken {

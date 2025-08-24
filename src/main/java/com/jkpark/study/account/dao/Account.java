@@ -1,7 +1,7 @@
-package com.jkpark.study.global.domain;
+package com.jkpark.study.account.dao;
 
+import com.jkpark.study.account.enums.Role;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.*;
 import java.util.UUID;

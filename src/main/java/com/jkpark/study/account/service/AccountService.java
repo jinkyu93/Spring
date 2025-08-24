@@ -2,11 +2,10 @@ package com.jkpark.study.account.service;
 
 import com.jkpark.study.account.exception.AccountConflictException;
 import com.jkpark.study.account.exception.AccountNotFoundException;
-import com.jkpark.study.global.domain.Account;
-import com.jkpark.study.global.domain.Role;
-import com.jkpark.study.global.dto.AccountDTO;
-import com.jkpark.study.global.repository.AccountRepository;
-import com.jkpark.study.global.service.AccountService;
+import com.jkpark.study.account.dao.Account;
+import com.jkpark.study.account.enums.Role;
+import com.jkpark.study.account.dto.AccountDTO;
+import com.jkpark.study.account.repository.AccountRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,12 +14,11 @@ import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class AccountServiceImpl implements AccountService {
+public class AccountService {
 	private AccountRepository dao;
 
 	private BCryptPasswordEncoder passwordEncoder;
 
-	@Override
 	public AccountDTO insert(AccountDTO account) {
 		checkAccountIsExist(account);
 		encodePassword(account);
@@ -45,7 +43,6 @@ public class AccountServiceImpl implements AccountService {
 		}
 	}
 
-	@Override
 	public AccountDTO findById(String id) {
 		Optional<Account> optionalAccount = dao.findById(id);
 		Account selectedAccount = optionalAccount.orElseThrow(AccountNotFoundException::new);

@@ -1,7 +1,7 @@
 package com.jkpark.study.security.context;
 
-import com.jkpark.study.global.domain.Role;
-import com.jkpark.study.global.dto.AccountDTO;
+import com.jkpark.study.account.enums.Role;
+import com.jkpark.study.account.dto.AccountDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;

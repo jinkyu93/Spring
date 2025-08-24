@@ -1,6 +1,6 @@
-package com.jkpark.study.global.dto;
+package com.jkpark.study.data.dto;
 
-import com.jkpark.study.global.domain.Data;
+import com.jkpark.study.data.dao.Data;
 import lombok.*;
 import java.util.Date;
 

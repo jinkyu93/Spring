@@ -1,7 +1,7 @@
 package com.jkpark.study.security.service;
 
-import com.jkpark.study.global.dto.AccountDTO;
-import com.jkpark.study.global.service.AccountService;
+import com.jkpark.study.account.service.AccountService;
+import com.jkpark.study.account.dto.AccountDTO;
 import com.jkpark.study.security.context.UserContext;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
