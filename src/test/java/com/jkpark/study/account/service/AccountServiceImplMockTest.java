@@ -10,9 +10,8 @@ import com.jkpark.study.global.service.AccountService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.util.Optional;
 
@@ -25,10 +24,10 @@ public class AccountServiceImplMockTest {
 	@Autowired
 	private AccountService service;
 
-	@MockBean
+	@MockitoBean
 	AccountRepository repository;
 
-	@MockBean
+	@MockitoBean
 	BCryptPasswordEncoder passwordEncoder;
 
 	private final String testIdValue = "admin";

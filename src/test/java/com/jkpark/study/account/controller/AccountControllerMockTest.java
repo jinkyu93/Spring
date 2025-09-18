@@ -10,9 +10,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -40,7 +40,7 @@ public class AccountControllerMockTest {
 	// @MockBean 내부는 텅 빈 Service 객체를 가져서 실제와 같이 동작을 하지 않는다
 	// 전수테스트가 아닌 유닛테스트
 	// Service 가 아닌 Controller 와의 데이터 통신만을 테스트 하기 위한 Unit Test Model
-	@MockBean
+	@MockitoBean
 	private AccountService service;
 
 	private ObjectMapper mapper = new ObjectMapper();

@@ -3,13 +3,11 @@ package com.jkpark.study.account.repository;
 import com.jkpark.study.global.domain.Account;
 import com.jkpark.study.global.domain.Role;
 import com.jkpark.study.global.repository.AccountRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Import;
-import org.springframework.test.context.TestExecutionListeners;
-import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -27,17 +25,24 @@ public class AccountRepositoryTest {
 	private final String testNewEncodedPasswordValue = "$33333333333333333333333333333333333333333333333333333333333";
 	private final Role testNewRoleValue = Role.ADMIN;
 
+	@BeforeEach
+	void setUp() {
+		dao.save(makeTestAccount());
+	}
+
+	@AfterEach
+	void tearDown() {
+		dao.deleteAll();
+	}
+
 	@Test
 	public void findByIdSuccess() {
-		// given
-		var testData = makeTestAccount();
-
 		// when
 		var result = dao.findById(testIdValue).get();
 
 		// then
-		assertEquals(result.getId(), testData.getId());
-		assertEquals(result.getPw(), testData.getPw());
+		assertEquals(result.getId(), testIdValue);
+		assertEquals(result.getPw(), testEncodedPasswordValue);
 	}
 
 	@Test
@@ -65,11 +70,8 @@ public class AccountRepositoryTest {
 
 	@Test
 	public void saveConflict() {
-		// given
-		var testData = makeTestAccount();
-
 		// when
-		var selectedAccount = dao.findById(testData.getId()).orElse(null);
+		var selectedAccount = dao.findById(testIdValue).orElse(null);
 
 		// then
 		assertNotNull(selectedAccount);
