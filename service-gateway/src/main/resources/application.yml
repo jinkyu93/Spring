@@ -1,0 +1,18 @@
+server:
+  port: 9001
+
+spring:
+  application:
+    name: service-gateway
+
+  cloud:
+    gateway:
+      routes:
+        - id: service=auth
+          uri: http://localhost:9002
+          predicates:
+            - Path=/auth/**
+        - id: service-data
+          uri: http://localhost:9003
+          predicates:
+            - Path=/data/**

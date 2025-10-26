@@ -1,1 +1,5 @@
 rootProject.name = 'study'
+
+include 'lib-common'
+include 'service-gateway'
+include 'service-data'
