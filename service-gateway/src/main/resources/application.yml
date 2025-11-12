@@ -8,7 +8,7 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: service=auth
+        - id: service-auth
           uri: http://localhost:9002
           predicates:
             - Path=/auth/**
